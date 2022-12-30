@@ -1,7 +1,6 @@
 # **README.md file for Part 2 of SDPA assignment**
 
 
-
 ### **External packages and libraries**
 
 
