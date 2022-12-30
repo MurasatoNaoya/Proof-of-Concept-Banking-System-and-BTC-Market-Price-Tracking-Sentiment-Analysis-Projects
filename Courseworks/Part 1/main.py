@@ -9,13 +9,15 @@ def main():
         while (True):
             decision = input("Enter choice: ")
 
-            if (int(decision)) == 1:
+            if int(decision) == 1:
                 BankingSystemInstance.create_account()
                 
                 break
 
-            elif (int(decision)) == 2: 
+            elif int(decision) == 2: 
                 BankingSystemInstance.login_screen()
+                
+                break 
                 
 
 
@@ -77,16 +79,6 @@ class BankingSystem():
         self.customers = {} # Empty dictionary to store customer accounts. 
 
 
-    def login(self, username, password):
-        """Verify the provided credentials and return the customer object for the logged in user."""
-        if username not in self.customers:
-            raise ValueError("An account with this username does not exist")
-        if self.customers[username].password != password:
-            raise ValueError("Incorrect password")
-        return self.customers[username]
-
-
-
     def main_display(self):  # Displaying the text-based screen, where the customer will see their inital options. 
 
         print("""
@@ -98,12 +90,12 @@ class BankingSystem():
                   """)
 
 
-    def login_screen():
+    def login_screen(self):
         while True:
             # Print the menu options
             print("\nMenu Options:")
-            print("1. Login")
-            print("2. Quit")
+            print("1. Login using a username and password.")
+            print("2. Quit, and return to main menue.")
 
             # Get the user's choice
             choice = int(input("Enter your choice: "))
@@ -116,24 +108,50 @@ class BankingSystem():
 
                 # Attempt to login with the provided credentials
                 try:
-                    customer = BankingSystem.login(username, password)
-                except ValueError as e:
+                    customer = self.login_check(username, password)
+                except ValueError:
                     # Print an error message if the login fails
-                    print(e)
+                    print('The login details provided are incorrect.')
                 else:
                     # If the login is successful, break out of the loop and return the customer object
                     print("Login successful")
-                    break
+                    return customer
+                    
+
             elif choice == 2:
                 # Break the while loop and return to the main page. 
                 print("Exiting login screen and returning to the main page..")
+
                 break
             else:
                 # Print an error message if an invalid choice is entered
                 print("Invalid choice. Please try again.")
 
-        return customer
+        
 
+
+
+
+
+
+
+
+
+
+
+    def login_check(self, username, password):
+        """Verify the provided credentials and return the customer object for the logged in user."""
+
+        if username not in self.customers:
+            raise ValueError("Unfortunately, an account with this username does not exist, please try again or exit this page.")
+
+        if self.customers[username].password != password:
+            raise ValueError("Incorrect password, please try again.")
+        
+        return self.customers[username]
+
+
+        
 
 
 
@@ -143,19 +161,20 @@ class BankingSystem():
 
         print('To create an account, you will need to provide the following details:')
         print('First name, last name, country of residence, age, email, password and username')
-
-        first_name = input('Please enter your first name:')
-        last_name = input('Please enter your last name:')
-        CofR = input('Please enter your country of residence:')
-        age = input('Please enter your age / how old you are:')
-        email = input('Please enter your email:')
-        password = input('Please enter your password')
-        username = input('And finally, please enter your username:')
+        print(' ')
+        first_name = input('Please enter your first name: ')
+        last_name = input('Please enter your last name: ')
+        CofR = input('Please enter your country of residence: ')
+        age = input('Please enter your age / how old you are: ')
+        email = input('Please enter your email: ')
+        username = input('And finally, please enter your username: ')
+        password = input('Please enter your password: ')
         
-        new_customer = Customer(first_name, last_name, CofR, age, email, password, username)
-        self.customers.update({new_customer.username : new_customer})
-        print(f'Customer of username {new_customer.username} your banking account has been successfully created.')
+        new_customer = Customer(first_name, last_name, CofR, age, email,username, password)
+        self.customers[new_customer.username] =  new_customer
+
         print('=====================================================================================')
+        print(f'Customer of username {new_customer.username}, your banking account has been successfully created.')
         print('To access to your account, please first login using the 2nd option of the menu below.')
         print('Alternatively, you can choose the 1st option again to create another account. ')
 
