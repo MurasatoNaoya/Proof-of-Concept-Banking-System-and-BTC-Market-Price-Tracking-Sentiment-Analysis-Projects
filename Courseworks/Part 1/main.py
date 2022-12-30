@@ -16,12 +16,11 @@ def main():
 
             elif int(decision) == 2: 
                 BankingSystemInstance.login_screen()
+                break
                 
-                break 
+                # while (True):
+
                 
-
-
-
 
 
 
@@ -32,14 +31,16 @@ def main():
 class Customer(): 
 
     # Defining a constructor that instantiaties consumer objects. 
-    def __init__(self, first_name, last_name, COR, age, email, password, username): 
+    def __init__(self, first_name, last_name, COR, age, email, username, password): 
         self.first_name = first_name
         self.last_name = last_name
         self.COR = COR
         self.age = age 
         self.email = email
-        self.password = password
         self.username = username 
+        self.password = password
+
+
 
 
     def create_wallet(self, wallet_name, wallet_type):
@@ -69,9 +70,13 @@ class Customer():
 
 
 
-class BankingSystem(): 
 
-    
+
+
+
+
+
+class BankingSystem(): 
     
     def __init__(self):
 
@@ -81,13 +86,38 @@ class BankingSystem():
 
     def main_display(self):  # Displaying the text-based screen, where the customer will see their inital options. 
 
-        print("""
+        print(f"""
                 ======= UOB Banking System =======
+                
                   1. Create an account
                   2. Access an existing account
                   
                   or enter any other key to exit
                   """)
+
+
+
+    def create_account(self):
+
+        print('To create an account, you will need to provide the following details:')
+        print('First name, last name, country of residence, age, email, password and username')
+        print(' ')
+        first_name = input('Please enter your first name: ')
+        last_name = input('Please enter your last name: ')
+        CofR = input('Please enter your country of residence: ')
+        age = input('Please enter your age / how old you are: ')
+        email = input('Please enter your email: ')
+        username = input('And finally, please enter your username: ').rstrip() # Appiled such that an accidential white space does not
+        password = input('Please enter your password: ').rstrip()              # trigger an incorrect password. 
+        
+        new_customer = Customer(first_name, last_name, CofR, age, email, username, password)
+        self.customers[new_customer.username] =  new_customer
+
+        print('=====================================================================================')
+        print(f'Customer of username {new_customer.username}, your banking account has been successfully created.')
+        print(f'{new_customer.username} and {new_customer.password}')
+        print('To access to your account, please first login using the 2nd option of the menu below.')
+        print('Alternatively, you can choose the 1st option again to create another account. ')
 
 
     def login_screen(self):
@@ -103,40 +133,31 @@ class BankingSystem():
             # Perform the appropriate action based on the user's choice
             if choice == 1:
                 # Get the input for the login credentials
-                username = input("Enter your username: ")
-                password = input("Enter your password: ")
+                username = input("Enter your username: ").rstrip() # Appiled such that an accidential white space does not
+                password = input("Enter your password: ").rstrip() # trigger an incorrect password. 
+        
 
                 # Attempt to login with the provided credentials
                 try:
                     customer = self.login_check(username, password)
                 except ValueError:
                     # Print an error message if the login fails
-                    print('The login details provided are incorrect.')
+                    print('The login details provided are incorrect, please try again or return to the main menu.')
                 else:
                     # If the login is successful, break out of the loop and return the customer object
-                    print("Login successful")
+                    print(' ')
+                    print(f"Login successful, welcome {username}")
                     return customer
                     
 
-            elif choice == 2:
-                # Break the while loop and return to the main page. 
-                print("Exiting login screen and returning to the main page..")
+            # elif choice == 2:
+            #     # Break the while loop and return to the main page. 
+            #     print("Exiting login screen and returning to the main page..")
 
-                break
-            else:
-                # Print an error message if an invalid choice is entered
-                print("Invalid choice. Please try again.")
-
-        
-
-
-
-
-
-
-
-
-
+            #     break
+            # else:
+            #     # Print an error message if an invalid choice is entered
+            #     print("Invalid choice. Please try again.")
 
 
     def login_check(self, username, password):
@@ -151,32 +172,23 @@ class BankingSystem():
         return self.customers[username]
 
 
+    
+
+    # def customer_display(self): 
+    #     print(f"\n======= UOB Banking System, {BankingSystem.customers.username} account =======\n  1. Create an account\n  2. Access an existing account\n  or enter any other key to exit")
         
-
-
-
-
-
-    def create_account(self):
-
-        print('To create an account, you will need to provide the following details:')
-        print('First name, last name, country of residence, age, email, password and username')
-        print(' ')
-        first_name = input('Please enter your first name: ')
-        last_name = input('Please enter your last name: ')
-        CofR = input('Please enter your country of residence: ')
-        age = input('Please enter your age / how old you are: ')
-        email = input('Please enter your email: ')
-        username = input('And finally, please enter your username: ')
-        password = input('Please enter your password: ')
         
-        new_customer = Customer(first_name, last_name, CofR, age, email,username, password)
-        self.customers[new_customer.username] =  new_customer
+        
+    #     pass
 
-        print('=====================================================================================')
-        print(f'Customer of username {new_customer.username}, your banking account has been successfully created.')
-        print('To access to your account, please first login using the 2nd option of the menu below.')
-        print('Alternatively, you can choose the 1st option again to create another account. ')
+
+
+
+
+
+
+
+
 
 
 
