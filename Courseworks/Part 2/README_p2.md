@@ -6,7 +6,7 @@
 
 
 
-For the sake of this project various external libraries were implemented for the sake of sourcing data through APIs and enriching data. All are simple to install, so long as Python in installed and all make use of Python's package manager, pip . 
+In the Part 2 of this SDPA assignment, various external libraries were implemented for the sake of sourcing data through APIs and enriching data. All are simple to install, so long as Python in installed and all make use of Python's package manager, pip . 
 
 A description of their basic function and information on how they can be install is listed as follows - 
 
