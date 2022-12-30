@@ -1,4 +1,4 @@
-# **README.md file for 2**
+# **README.md file for Part 2 of SDPA assignment**
 
 
 
