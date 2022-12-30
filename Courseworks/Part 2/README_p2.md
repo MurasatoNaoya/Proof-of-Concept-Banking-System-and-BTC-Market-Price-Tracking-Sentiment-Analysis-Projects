@@ -1,6 +1,5 @@
 #**README.md file for 2**
 
-
 ###**External packages libraries**
 
 
@@ -11,11 +10,10 @@ A description of their basic function and information on how they can be install
 
 
 - **pandas:** This library provides data structures and data analysis tools for working with tabular data, allowing the  this assignment, 
-Installed with the following command, pip install pandas . 
+Installed with the following command -  **pip install pandas** . 
 
-- **matplotlib:** This library provides functions for creating various types of plots and charts. It is a powerful tool for data visualization, and is often used in conjunction with pandas to create plots of data stored in a DataFrame. Using for this project to visualise correlations between variables investigated in this report. Installed with the following command, pip install matplotlib.
+- **matplotlib:** This library provides functions for creating various types of plots and charts. It is a powerful tool for data visualization, and is often used in conjunction with pandas to create plots of data stored in a DataFrame. Using for this project to visualise correlations between variables investigated in this report. Installed with the following command -  **pip install matplotlib.**
 
- 
 - **seaborn:** This library provides functions for creating more advanced and visually appealing plots, built on top of matplotlib.pyplot. Installed with the folloiwng command -  **pip install seaborn** . 
 
 - **datetime:** This library provides classes for working with date and time data. It includes functions for parsing dates and times from strings, formatting dates and times as strings, and performing arithmetic with dates and times. Used in this project to pass in dates into functions to retrieve data within a particular time range. Installed with the following command -  **pip install datetime** . 
