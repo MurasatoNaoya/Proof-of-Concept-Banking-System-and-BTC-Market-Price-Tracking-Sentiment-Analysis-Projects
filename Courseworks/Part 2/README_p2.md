@@ -1,6 +1,9 @@
-#**README.md file for 2**
+# **README.md file for 2**
 
-###**External packages libraries**
+
+
+
+**External packages libraries**
 
 
 For the sake of this project various external libraries were implemented for the sake of sourcing data through APIs and enriching data. All are simple to install, so long as Python in installed and all make use of Python's package manager, pip . 
