@@ -2,7 +2,7 @@
 
 
 
-### **External packages libraries**
+### **External packages and libraries**
 
 
 
