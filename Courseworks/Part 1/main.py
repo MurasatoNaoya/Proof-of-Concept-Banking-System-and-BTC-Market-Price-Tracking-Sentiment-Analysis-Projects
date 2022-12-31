@@ -1,17 +1,25 @@
 import sys # sys is part of the Python standard library. Used primary in this script to exit the banking system. 
 
 def main():
-
+    base = True
+    a = True 
+    b = True 
+    c = True
 
     BankingSystemInstance = BankingSystem()
-    while (True): 
 
+    while base: 
+        a = True
         BankingSystemInstance.main_display()
 
-        while (True):
+        while a:
             decision = input("Enter choice: ")
-
-            if int(decision) == 1:
+          
+            if decision.isnumeric() == False: 
+                BankingSystemInstance.terminate()
+                
+            
+            elif int(decision) == 1:
                 BankingSystemInstance.create_account()
                 
                 break
@@ -19,33 +27,45 @@ def main():
             elif int(decision) == 2: 
                 if len(BankingSystemInstance.customers) == 0:
                     print(' ')
-                    print('Currently, there are no available accounts to access, to create an account, first in order to proceed.')
+                    print('Currently, there are no available accounts for you to access.') 
+                    print('Please create an account first, in order to proceed.')
+                    print(' ')
                     break
                 
                 customer = BankingSystemInstance.login_screen()
 
+                if customer == None: 
+                    break
+
             else: 
                 BankingSystemInstance.terminate()
-                
 
-            while (True):
-
+                          
+            while b:
                 BankingSystemInstance.customer_display(customer)
                 
-                while (True): 
-                    decision = input('Enter choice: ')
+                decision = input('Enter choice: ')
 
-                    if int(decision) == 1:
-                        customer.create_wallet()
-                    
+                if decision.isnumeric() == False: 
+                    print(' ')
+                    print('Please enter a valid options provided on the customer page.')
 
-                    elif int(decision) == 2:
-                        break # Functionality not added yet. 
-
-                    else: 
-                        print(f'Returned to customer menu of customer {customer.username}.')
-                        break
+                if int(decision) == 1:
+                    customer.create_wallet()
                 
+
+                elif int(decision) == 2:
+                    break # Functionality not added yet. 
+
+                else: 
+                    print(' ')
+                    print(f'Thank you, {customer.username}.')
+                    print('Returning to main menu now...')
+
+                    a = False
+                    break 
+                
+            
 
 
 
@@ -65,15 +85,16 @@ class Customer():
         self.password = password
 
         self.wallets = {} # Empty dictionary where wallet objects created by the user are stored. 
-        self.counter = 0
         self.wallet_id = 0  # Initialise the wallet_id counter to 0
+        self.wallet_valid = [1, 2, 3, 4]
 
 
 
     def create_wallet(self):
+
+        
         """Create a new wallet with a given name and type."""
-        self.counter += 1
-        options = [1, 2, 3, 4]
+        
         print("\n========= Wallet creation menu ==========")
         print(f'Welcome to the wallet creation menue, user {self.username}.')
         print('Please select one of the options to create a wallet for your specific needs.')
@@ -84,18 +105,34 @@ class Customer():
         print("3. Holidays ")
         print("4. Mortgage ") 
         print(' ')
-
-
-        wallet_type = input('Please select the type of wallet you would like by entering one of the numbers above: ')
-        if wallet_type not in options: 
-        # None of the inputted names match a wallet type. 
-            # A ValueError is returned until a valid wallet name is inputted. 
-            raise ValueError(" An invalid wallet type as been selected, please try again or return to the account menu.")
-
-        wallet_name = input('Please enter name for your wallet: ')
-        if wallet_name in self.wallets: 
-            raise ValueError("A wallet with this name already exists")
     
+        while True:
+            try:
+                wallet_type = input('Please select the type of wallet you would like by entering one of the numbers above: ')
+                wallet_type = int(wallet_type)
+                if wallet_type in self.wallet_valid: 
+                    break
+                else:
+                    print(' ')
+                    print("An invalid wallet type as been selected, please try again or return to the account menu.")
+                    print(' ')
+            except ValueError:
+                print(' ')
+                print("An invalid input has been entered, please try again or return to the account menu.")
+                print(' ')
+
+
+        while True:
+            wallet_name = input('Please enter a name for your wallet: ')
+            
+            if wallet_name in self.wallets: 
+                print(' ')
+                print("A wallet with this name already exists, please try a different name.")
+                print(' ')
+
+            else: 
+                break
+        
         self.wallet_id += 1
         wallet_id = f"{self.wallet_id:03d}"  # Format the wallet_id as a 3-digit string (e.g. 001, 002, etc.)
         # Create the appropriate type of wallet based on the provided type
@@ -103,17 +140,47 @@ class Customer():
 
         if wallet_type == 1:
             self.wallets[wallet_name] = DailyUseWallet(wallet_id)
+            print(' ')
+            print(f'A daily use wallet of the name: {wallet_name} has been created.')
+            print(f'This created wallet has the ID: {wallet_id}')
+            print(' ')
+            print(f'Returning to customer page of user: {self.username} now...')
+            print(' ')
+
 
         elif wallet_type == 2:
             self.wallets[wallet_name] = SavingsWallet(wallet_id)
+            print(' ')
+            print(f'A savings wallet of the name: {wallet_name} has been created.')
+            print(f'This created wallet has the ID: {wallet_id}')
+            print(' ')
+            print(f'Returning to customer page of user: {self.username} now...')
+            print(' ')
+
+
 
         elif wallet_type == 3:
             self.wallets[wallet_name] = HolidaysWallet(wallet_id)
+            print(' ')
+            print(f'A holidays wallet of the name: {wallet_name} has been created.')
+            print(f'This created wallet has the ID: {wallet_id}')
+            print(' ')
+            print(f'Returning to customer page of user: {self.username} now...')
+            print(' ')
 
+
+                
         elif wallet_type == 4:
             self.wallets[wallet_name] = MortgageWallet(wallet_id)
+            print(' ')
+            print(f'A mortgage wallet of the name: {wallet_name} has been created.')
+            print(f'This created wallet has the ID: {wallet_id}')
+            print(' ')
+            print(f'Returning to customer page of user: {self.username} now...')
+            print(' ')
 
-
+        
+        
 
 
 
@@ -174,55 +241,38 @@ class BankingSystem():
 
         print('=====================================================================================')
         print(f'Customer of username {new_customer.username}, your banking account has been successfully created.')
-        print(f'{new_customer.username} and {new_customer.password}')
+        # print(f'{new_customer.username} and {new_customer.password}')
         print('To access to your account, please first login using the 2nd option of the menu below.')
         print('Alternatively, you can choose the 1st option again to create another account. ')
-        print('If there ')
 
 
     def login_screen(self):
         while True:
-            # Print the menu options
-            print("\n========= Login Menu Options ==========")
-            print(' ' )
-            print("1. Login using a username and password.")
-            print("2. Quit, and return to main menue.")
+
+            # Get the input for the login credentials
             print(' ')
-            # Get the user's choice
-            choice = int(input("Enter your choice: "))
+            print('======== Login to account ========')
+            username = input('Enter your username: ').rstrip() # Appiled such that an accidential white space does not
+            password = input('Enter your password: ').rstrip() # trigger an incorrect password. 
+    
 
-            # Perform the appropriate action based on the user's choice
-            if choice == 1:
-                # Get the input for the login credentials
-                username = input("Enter your username: ").rstrip() # Appiled such that an accidential white space does not
-                password = input("Enter your password: ").rstrip() # trigger an incorrect password. 
-        
-
-                # Attempt to login with the provided credentials
-                try:
-                    customer = self.login_check(username, password)
-                except ValueError:
-                    # Print an error message if the login fails
-                    print(' ')
-                    print('The login details provided are incorrect, please try again or return to the main menu.')
-                else:
-                    # If the login is successful, break out of the loop and return the customer object
-                    print(' ')
-                    print(f"Login successful, welcome {username}.")
-
-                    return customer 
-                    
-
-            elif choice == 2:
-                # Break the while loop and return to the main page. 
-                print("Exiting login screen and returning to the main page..")
-
+            # Attempt to login with the provided credentials
+            try:
+                customer = self.login_check(username, password)
+            except ValueError:
+                # Print an error message if the login fails
+                print(' ')
+                print('The login details provided are incorrect, as they do not match any account on our system.')
+                print('Returning to main menu..')
                 break
 
             else:
-                # Print an error message if an invalid choice is entered
+                # If the login is successful, break out of the loop and return the customer object
                 print(' ')
-                print("Invalid choice has been selected, please try again mor return to the main menu.")
+                print(f"Login successful, welcome {username}.") 
+                
+                return customer
+
 
 
     def login_check(self, username, password):
@@ -255,6 +305,7 @@ class BankingSystem():
         print(' ')
         print('You have chosen to exit the UOB banking system.')
         print('Thank you for your patronage, we hope to see you again soon!')
+        print(' ')
         
         sys.exit()
 
