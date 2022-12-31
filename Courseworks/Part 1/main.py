@@ -1,5 +1,7 @@
+import sys # sys is part of the Python standard library. Used primary in this script to exit the banking system. 
 
 def main():
+
 
     BankingSystemInstance = BankingSystem()
     while (True): 
@@ -15,13 +17,35 @@ def main():
                 break
 
             elif int(decision) == 2: 
-                BankingSystemInstance.login_screen()
-                break
+                if len(BankingSystemInstance.customers) == 0:
+                    print(' ')
+                    print('Currently, there are no available accounts to access, to create an account, first in order to proceed.')
+                    break
                 
-                # while (True):
+                customer = BankingSystemInstance.login_screen()
 
+            else: 
+                BankingSystemInstance.terminate()
                 
 
+            while (True):
+
+                BankingSystemInstance.customer_display(customer)
+                
+                while (True): 
+                    decision = input('Enter choice: ')
+
+                    if int(decision) == 1:
+                        customer.create_wallet()
+                    
+
+                    elif int(decision) == 2:
+                        break # Functionality not added yet. 
+
+                    else: 
+                        print(f'Returned to customer menu of customer {customer.username}.')
+                        break
+                
 
 
 
@@ -30,7 +54,7 @@ def main():
 
 class Customer(): 
 
-    # Defining a constructor that instantiaties consumer objects. 
+    # Defining a constructor that instantiaties consumer objects. s
     def __init__(self, first_name, last_name, COR, age, email, username, password): 
         self.first_name = first_name
         self.last_name = last_name
@@ -40,26 +64,61 @@ class Customer():
         self.username = username 
         self.password = password
 
+        self.wallets = {} # Empty dictionary where wallet objects created by the user are stored. 
+        self.counter = 0
+        self.wallet_id = 0  # Initialise the wallet_id counter to 0
 
 
 
-    def create_wallet(self, wallet_name, wallet_type):
+    def create_wallet(self):
         """Create a new wallet with a given name and type."""
-        if wallet_name in self.wallets:
-            raise ValueError("A wallet with this name already exists")
-        # Create the appropriate type of wallet based on the provided type
-        if wallet_type == "daily_use":
-            self.wallets[wallet_name] = DailyUseWallet()
-        elif wallet_type == "savings":
-            self.wallets[wallet_name] = SavingsWallet()
-        elif wallet_type == "holidays":
-            self.wallets[wallet_name] = HolidaysWallet()
-        elif wallet_type == "mortgage":
-            self.wallets[wallet_name] = MortgageWallet()
-        else:
-            # None of the inputted names match a wallet type. 
+        self.counter += 1
+        options = [1, 2, 3, 4]
+        print("\n========= Wallet creation menu ==========")
+        print(f'Welcome to the wallet creation menue, user {self.username}.')
+        print('Please select one of the options to create a wallet for your specific needs.')
+        print(' ')
+        print('Available wallet types - ')
+        print("1. Daily use ")
+        print("2. Savings ") 
+        print("3. Holidays ")
+        print("4. Mortgage ") 
+        print(' ')
+
+
+        wallet_type = input('Please select the type of wallet you would like by entering one of the numbers above: ')
+        if wallet_type not in options: 
+        # None of the inputted names match a wallet type. 
             # A ValueError is returned until a valid wallet name is inputted. 
-            raise ValueError("Invalid wallet type")
+            raise ValueError(" An invalid wallet type as been selected, please try again or return to the account menu.")
+
+        wallet_name = input('Please enter name for your wallet: ')
+        if wallet_name in self.wallets: 
+            raise ValueError("A wallet with this name already exists")
+    
+        self.wallet_id += 1
+        wallet_id = f"{self.wallet_id:03d}"  # Format the wallet_id as a 3-digit string (e.g. 001, 002, etc.)
+        # Create the appropriate type of wallet based on the provided type
+
+
+        if wallet_type == 1:
+            self.wallets[wallet_name] = DailyUseWallet(wallet_id)
+
+        elif wallet_type == 2:
+            self.wallets[wallet_name] = SavingsWallet(wallet_id)
+
+        elif wallet_type == 3:
+            self.wallets[wallet_name] = HolidaysWallet(wallet_id)
+
+        elif wallet_type == 4:
+            self.wallets[wallet_name] = MortgageWallet(wallet_id)
+
+
+
+
+
+
+
 
 
     def delete_wallet(self, wallet_name):
@@ -81,12 +140,12 @@ class BankingSystem():
     def __init__(self):
 
         self.transaction_fees = 0 # Transaction fees start at zero for every run of the program. 
-        self.customers = {} # Empty dictionary to store customer accounts. 
+        self.customers = {} # Empty dictionary to store customer objects. 
 
 
     def main_display(self):  # Displaying the text-based screen, where the customer will see their inital options. 
 
-        print(f"""
+        print("""
                 ======= UOB Banking System =======
                 
                   1. Create an account
@@ -118,15 +177,17 @@ class BankingSystem():
         print(f'{new_customer.username} and {new_customer.password}')
         print('To access to your account, please first login using the 2nd option of the menu below.')
         print('Alternatively, you can choose the 1st option again to create another account. ')
+        print('If there ')
 
 
     def login_screen(self):
         while True:
             # Print the menu options
-            print("\nMenu Options:")
+            print("\n========= Login Menu Options ==========")
+            print(' ' )
             print("1. Login using a username and password.")
             print("2. Quit, and return to main menue.")
-
+            print(' ')
             # Get the user's choice
             choice = int(input("Enter your choice: "))
 
@@ -142,22 +203,26 @@ class BankingSystem():
                     customer = self.login_check(username, password)
                 except ValueError:
                     # Print an error message if the login fails
+                    print(' ')
                     print('The login details provided are incorrect, please try again or return to the main menu.')
                 else:
                     # If the login is successful, break out of the loop and return the customer object
                     print(' ')
-                    print(f"Login successful, welcome {username}")
-                    return customer
+                    print(f"Login successful, welcome {username}.")
+
+                    return customer 
                     
 
-            # elif choice == 2:
-            #     # Break the while loop and return to the main page. 
-            #     print("Exiting login screen and returning to the main page..")
+            elif choice == 2:
+                # Break the while loop and return to the main page. 
+                print("Exiting login screen and returning to the main page..")
 
-            #     break
-            # else:
-            #     # Print an error message if an invalid choice is entered
-            #     print("Invalid choice. Please try again.")
+                break
+
+            else:
+                # Print an error message if an invalid choice is entered
+                print(' ')
+                print("Invalid choice has been selected, please try again mor return to the main menu.")
 
 
     def login_check(self, username, password):
@@ -169,17 +234,29 @@ class BankingSystem():
         if self.customers[username].password != password:
             raise ValueError("Incorrect password, please try again.")
         
-        return self.customers[username]
+        return self.customers[username] # This returns the customer object for the checked username. 
 
 
     
 
-    # def customer_display(self): 
-    #     print(f"\n======= UOB Banking System, {BankingSystem.customers.username} account =======\n  1. Create an account\n  2. Access an existing account\n  or enter any other key to exit")
+    def customer_display(self, customer): 
+        print(f"""
+        ======= Account page for user: {customer.username} =======
         
+            1. Create a wallet
+            2.) Manage active wallets 
+            
+            or enter any other key to exit
+            """)
         
+
+
+    def terminate(self): 
+        print(' ')
+        print('You have chosen to exit the UOB banking system.')
+        print('Thank you for your patronage, we hope to see you again soon!')
         
-    #     pass
+        sys.exit()
 
 
 
@@ -195,11 +272,10 @@ class BankingSystem():
 
 
 
-
-
-class Wallet:
-    def __init__(self):
+class Wallet():
+    def __init__(self, wallet_id):
         self.balance = 0  # Initial balance is 0
+        self.wallet_id = wallet_id
 
     # All of the wallets have a deposit method, so this can be inherited for all variations. 
     def deposit(self, amount):
