@@ -515,6 +515,11 @@ class DailyUseWallet(Wallet):
     wallet_type = 'Daily Use' 
 
     def withdraw(self):
+            # Check if the wallet's balance is equal to 0
+        if self.balance == 0:
+            print('Sorry, you cannot withdraw from a wallet with a balance of 0.')
+            return
+        
         while True:
             try:
                 print('If you have changed your mind about withdrawing from this wallet, enter any letter or character to return to the previous page.')
@@ -554,6 +559,11 @@ class SavingsWallet(Wallet):
         
          
     def withdraw(self):
+
+        if self.balance == 0:
+            print('Sorry, you cannot withdraw from a wallet with a balance of 0.')
+            return
+
         while True:
             try:
                 print('If you have changed your mind about withdrawing from this wallet, enter any letter or character to return to the previous page.')
