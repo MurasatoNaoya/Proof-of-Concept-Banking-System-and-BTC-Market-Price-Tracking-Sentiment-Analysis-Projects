@@ -5,11 +5,20 @@ def main():
     a = True 
     b = True 
     c = True
+    d = True 
+    e = True 
+    f = True
 
+    print(' ')
+    print('Welcome to the UOB banking system.')
     BankingSystemInstance = BankingSystem()
 
     while base: 
         a = True
+        b = True
+        c = True 
+        e = True
+
         BankingSystemInstance.main_display()
 
         while a:
@@ -27,7 +36,7 @@ def main():
             elif int(decision) == 2: 
                 if len(BankingSystemInstance.customers) == 0:
                     print(' ')
-                    print('Currently, there are no available accounts for you to access.') 
+                    print('Currently, there are no registered accounts available for you to access.') 
                     print('Please create an account first, in order to proceed.')
                     print(' ')
                     break
@@ -43,30 +52,105 @@ def main():
                           
             while b:
                 BankingSystemInstance.customer_display(customer)
+                c = True
+                e = True
                 
-                decision = input('Enter choice: ')
+                while c:
+                    decision = input('Enter choice: ')
 
-                if decision.isnumeric() == False: 
-                    print(' ')
-                    print('Please enter a valid options provided on the customer page.')
+                    if decision.isnumeric() == False: 
+                        print(' ')
+                        print('The entered value is not a valid option, please try again.')
+                        print('The login and return to the main menu, please press 3. ')
+                        break 
+                    
+                    if int(decision) == 1:
+                        customer.create_wallet()
+                        break
 
-                if int(decision) == 1:
-                    customer.create_wallet()
-                
+                    elif int(decision) == 2:
+                        if len(customer.wallets) ==0:
+                            print(' ')
+                            print('Currently, there are no active wallets associated with your account.') 
+                            print('In order to proceed, first create a wallet.')
+                            print(' ')
 
-                elif int(decision) == 2:
-                    break # Functionality not added yet. 
+                            break 
+                        
+                    elif int(decision) == 3: 
+                        print(' ')
+                        print(f'Logging out of the account of username: {customer.username}')
+                        print('Returning to main menu now...')
 
-                else: 
-                    print(' ')
-                    print(f'Thank you, {customer.username}.')
-                    print('Returning to main menu now...')
+                        a = False
+                        b = False
+                        break 
 
-                    a = False
-                    break 
-                
+                    elif int(decision) == 4: 
+
+                        while d:
+                            delete = BankingSystemInstance.del_account(customer)
+
+                            if delete == True: 
+                                
+                                a = False
+                                b = False
+                                c = False
+                                e = False # This must be added to ensure while loop E is not mistakenly run afterwards. 
+                                break
+
+                            
+                            elif delete == False:
+                                
+                                c = False
+                                e = False # This must be added to ensure while loop E is not mistakenly run afterwards. 
+                                break
+                        
+                        
+
+
             
+                    while e: 
+                        print('Now entered while loop E!!')
+                        BankingSystemInstance.walletm_display(customer)
+                        
+                        while f:
+                            decision = input('Enter choice: ')
 
+                        if decision.isnumeric() == False: 
+
+                            print(' ')
+                            print('The entered value is not a valid option, please try again.')
+                            break
+                        
+                        if int(decision) == 1:
+                            customer.create_wallet()
+                            break
+
+                        elif int(decision) == 2:
+                            if len(customer.wallets) ==0:
+                                print(' ')
+                                print('Currently, there are no active wallets associated with your account.') 
+                                print('In order to proceed, first create a wallet.')
+                                print(' ')
+
+                                break 
+                            
+                        elif int(decision) == 3: 
+                            print(' ')
+                            print(f'Logging out of the account of username: {customer.username}')
+                            print('Returning to main menu now...')
+
+                            a = False
+                            b = False
+                            break 
+
+                        else: 
+                            print(' ')
+                            print('The entered value is not a valid option, please try again.')
+                            break 
+                
+                            
 
 
 
@@ -123,7 +207,7 @@ class Customer():
 
 
         while True:
-            wallet_name = input('Please enter a name for your wallet: ')
+            wallet_name = input('Please enter a name for your wallet: ').rstrip()
             
             if wallet_name in self.wallets: 
                 print(' ')
@@ -141,20 +225,20 @@ class Customer():
         if wallet_type == 1:
             self.wallets[wallet_name] = DailyUseWallet(wallet_id)
             print(' ')
-            print(f'A daily use wallet of the name: {wallet_name} has been created.')
+            print(f'A daily use wallet of the name: {wallet_name}, has been created.')
             print(f'This created wallet has the ID: {wallet_id}')
             print(' ')
-            print(f'Returning to customer page of user: {self.username} now...')
+            print(f'Returning to customer page of user: {self.username}...')
             print(' ')
 
 
         elif wallet_type == 2:
             self.wallets[wallet_name] = SavingsWallet(wallet_id)
             print(' ')
-            print(f'A savings wallet of the name: {wallet_name} has been created.')
+            print(f'A savings wallet of the name: {wallet_name}, has been created.')
             print(f'This created wallet has the ID: {wallet_id}')
             print(' ')
-            print(f'Returning to customer page of user: {self.username} now...')
+            print(f'Returning to customer page of user: {self.username}...')
             print(' ')
 
 
@@ -162,10 +246,10 @@ class Customer():
         elif wallet_type == 3:
             self.wallets[wallet_name] = HolidaysWallet(wallet_id)
             print(' ')
-            print(f'A holidays wallet of the name: {wallet_name} has been created.')
+            print(f'A holidays wallet of the name: {wallet_name}, has been created.')
             print(f'This created wallet has the ID: {wallet_id}')
             print(' ')
-            print(f'Returning to customer page of user: {self.username} now...')
+            print(f'Returning to customer page of user: {self.username}...')
             print(' ')
 
 
@@ -173,18 +257,13 @@ class Customer():
         elif wallet_type == 4:
             self.wallets[wallet_name] = MortgageWallet(wallet_id)
             print(' ')
-            print(f'A mortgage wallet of the name: {wallet_name} has been created.')
+            print(f'A mortgage wallet of the name: {wallet_name}, has been created.')
             print(f'This created wallet has the ID: {wallet_id}')
             print(' ')
-            print(f'Returning to customer page of user: {self.username} now...')
+            print(f'Returning to customer page of user: {self.username}...')
             print(' ')
 
         
-        
-
-
-
-
 
 
 
@@ -262,7 +341,7 @@ class BankingSystem():
             except ValueError:
                 # Print an error message if the login fails
                 print(' ')
-                print('The login details provided are incorrect, as they do not match any account on our system.')
+                print('The login details provided are incorrect, as they do not match any registered account on our system.')
                 print('Returning to main menu..')
                 break
 
@@ -291,14 +370,33 @@ class BankingSystem():
 
     def customer_display(self, customer): 
         print(f"""
-        ======= Account page for user: {customer.username} =======
+        ======= Customer account menu for user: {customer.username} =======
         
             1. Create a wallet
-            2.) Manage active wallets 
+            2. Manage active wallets 
+            3. Log out of account and return to main menu
+            4. Close account
             
-            or enter any other key to exit
             """)
         
+
+
+    def walletm_display(self, customer):
+        print(f"""
+        ======= Wallet management menu for user: {customer.username} =======
+        
+            1. Display properties of a wallet
+            2. Deposit to wallet
+            3. Withdraw from wallet
+            4. Local transfer between owned wallets
+            5. Global transfer to another customer's wallet
+            6. Delete a wallet
+            
+            or enter any other key to exit
+            and return to the customer menu
+            """)
+
+
 
 
     def terminate(self): 
@@ -313,9 +411,43 @@ class BankingSystem():
 
 
 
+    def del_account(self, customer): 
 
 
+        print(' ')
+        print('If your account is closed, all account information, including any created wallets will be lost.')
+        print('Please enter Y/y, for Yes and N/n, for No.')
+        print(' ')
+        confirmation = input(f'{customer.username}, are sure you want to close your account?')
 
+        if confirmation.isnumeric() == True: 
+            print(' ')
+            print('The entered value is not a valid option, please try again.')
+            print('The login and return to the main menu, please press 3. ')
+            
+        elif confirmation.lower() == 'y':
+            print(' ')
+            print(f'The account of username: {customer.username}, has been closed.')
+            del(self.customers[customer.username])
+            print('Now returning to main menu...')
+
+            return True
+            
+
+        elif confirmation.lower() == 'n':
+            print(' ')
+            print(f'The deletion of the account with username: {customer.username}, has been cancelled.')
+            print(f'Now returning to customer menu...')
+            
+            return False
+
+
+        else: 
+            print(' ')
+            print('The value provided is not a valid option.')
+            print('Please look at the available options and try again.')
+            print(' ')
+            print(' ')
 
 
 
@@ -377,45 +509,6 @@ class MortgageWallet(Wallet):
     # The mortgage wallet has the same functionality as the base Wallet class. 
     # So no additional functions need to be inherited. 
     pass 
-
-
-
-
-
-
-
-
-
-
-
-"""def create_wallet():
-
-        pass
-
-
-    #def delete_wallet(): 
-#        pass
-
-    
-    def log_in(): 
-        pass 
-
-
-    def log_out():
-        pass
-
-    
-
-    def deposit(): 
-        pass
-        
-        input('How much would you like to withdraw?')
-
-    
-    def transfer(): 
-        pass
-
- """
 
 
 main()
