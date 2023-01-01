@@ -84,6 +84,7 @@ def main():
 
                         a = False
                         b = False
+    
                         break 
 
                     elif int(decision) == 4: 
@@ -111,45 +112,41 @@ def main():
 
             
                     while e: 
-                        print('Now entered while loop E!!')
                         BankingSystemInstance.walletm_display(customer)
                         
                         while f:
                             decision = input('Enter choice: ')
 
-                        if decision.isnumeric() == False: 
-
-                            print(' ')
-                            print('The entered value is not a valid option, please try again.')
-                            break
-                        
-                        if int(decision) == 1:
-                            customer.create_wallet()
-                            break
-
-                        elif int(decision) == 2:
-                            if len(customer.wallets) ==0:
+                            if decision.isnumeric() == False:  
                                 print(' ')
-                                print('Currently, there are no active wallets associated with your account.') 
-                                print('In order to proceed, first create a wallet.')
-                                print(' ')
-
+                                print('Returning to customer menu...')
+                                
+                                e = False
+                                c = False
                                 break 
-                            
-                        elif int(decision) == 3: 
-                            print(' ')
-                            print(f'Logging out of the account of username: {customer.username}')
-                            print('Returning to main menu now...')
 
-                            a = False
-                            b = False
-                            break 
+                            if int(decision) == 1:
+                                customer.select_wallet()
+                                
 
-                        else: 
-                            print(' ')
-                            print('The entered value is not a valid option, please try again.')
-                            break 
-                
+                            elif int(decision) == 2:
+                                wallet = customer.select_wallet()
+                                wallet.deposit()
+                                break
+                                
+                            elif int(decision) == 3: 
+                                wallet = customer.select_wallet()
+                                wallet.withdraw()
+                                break 
+
+                            else: 
+                                print(' ')
+                                print('Returning to customer menu...')
+                                
+                                e = False
+                                c = False
+                                break 
+                                
                             
 
 
@@ -223,46 +220,48 @@ class Customer():
 
 
         if wallet_type == 1:
-            self.wallets[wallet_name] = DailyUseWallet(wallet_id)
+            self.wallets[wallet_name] = DailyUseWallet(wallet_id, wallet_name) # wallet_type is also defined as a static attribute.
             print(' ')
-            print(f'A daily use wallet of the name: {wallet_name}, has been created.')
+            print(f'A Daily Use wallet of the name: {wallet_name}, has been created.')
             print(f'This created wallet has the ID: {wallet_id}')
             print(' ')
             print(f'Returning to customer page of user: {self.username}...')
             print(' ')
+            #print(self.wallets[wallet_name].wallet_type)
 
 
         elif wallet_type == 2:
-            self.wallets[wallet_name] = SavingsWallet(wallet_id)
+            self.wallets[wallet_name] = SavingsWallet(wallet_id, wallet_name) # wallet_type is also defined as a static attribute.
             print(' ')
-            print(f'A savings wallet of the name: {wallet_name}, has been created.')
+            print(f'A Savings wallet of the name: {wallet_name}, has been created.')
             print(f'This created wallet has the ID: {wallet_id}')
             print(' ')
             print(f'Returning to customer page of user: {self.username}...')
             print(' ')
-
+            #print(self.wallets[wallet_name].wallet_type)
 
 
         elif wallet_type == 3:
-            self.wallets[wallet_name] = HolidaysWallet(wallet_id)
+            self.wallets[wallet_name] = HolidaysWallet(wallet_id, wallet_name) # wallet_type is also defined as a static attribute. 
             print(' ')
-            print(f'A holidays wallet of the name: {wallet_name}, has been created.')
+            print(f'A Holidays wallet of the name: {wallet_name}, has been created.')
             print(f'This created wallet has the ID: {wallet_id}')
             print(' ')
             print(f'Returning to customer page of user: {self.username}...')
             print(' ')
+            #print(self.wallets[wallet_name].wallet_type)
 
 
                 
         elif wallet_type == 4:
-            self.wallets[wallet_name] = MortgageWallet(wallet_id)
+            self.wallets[wallet_name] = MortgageWallet(wallet_id, wallet_name) # wallet_type is also defined as a static attribute. 
             print(' ')
-            print(f'A mortgage wallet of the name: {wallet_name}, has been created.')
+            print(f'A Mortgage wallet of the name: {wallet_name}, has been created.')
             print(f'This created wallet has the ID: {wallet_id}')
             print(' ')
             print(f'Returning to customer page of user: {self.username}...')
             print(' ')
-
+            #print(self.wallets[wallet_name].wallet_type)
         
 
 
@@ -274,6 +273,32 @@ class Customer():
             del self.wallets[wallet_name]
 
 
+    
+    def select_wallet(self):
+
+        """Display all available wallets and allow the user to select one by number."""
+        print("\n========= Wallet selection menu ==========")
+        print(f'Welcome to the wallet selection menu, user {self.username}.')
+        print('Please select one of the available wallets by entering its number.')
+        print(' ')
+        print('Available wallets:')
+        for i, (name, wallet) in enumerate(self.wallets.items()):
+            print(f"{i+1}. {wallet.wallet_id}, {wallet.wallet_type} wallet of name: {name}")
+        print(' ')
+
+        # Prompt the user to select a wallet
+        while True:
+            selection = input('Enter a number to select a wallet: ')
+            try:
+                selection = int(selection)
+                if 1 <= selection <= len(self.wallets): # Has to greater than or equal to 1 as that's the first specified option, and less than or equal to the available wallets. 
+                    # Get the wallet name and wallet object corresponding to the selected number
+                    wallet_name, wallet = list(self.wallets.items())[selection-1]
+                    return wallet
+                else:
+                    print("Invalid selection. Please enter a number corresponding to one of the available wallets.")
+            except ValueError:
+                print("Invalid input. Please enter a valid number.")
 
 
 
@@ -285,7 +310,7 @@ class BankingSystem():
     
     def __init__(self):
 
-        self.transaction_fees = 0 # Transaction fees start at zero for every run of the program. 
+        self.system_account = 0 # Transaction fees start at zero for every run of the program. 
         self.customers = {} # Empty dictionary to store customer objects. 
 
 
@@ -318,6 +343,7 @@ class BankingSystem():
         new_customer = Customer(first_name, last_name, CofR, age, email, username, password)
         self.customers[new_customer.username] =  new_customer
 
+        print(' ')
         print('=====================================================================================')
         print(f'Customer of username {new_customer.username}, your banking account has been successfully created.')
         # print(f'{new_customer.username} and {new_customer.password}')
@@ -385,7 +411,7 @@ class BankingSystem():
         print(f"""
         ======= Wallet management menu for user: {customer.username} =======
         
-            1. Display properties of a wallet
+            1. Display detials and properties of active wallets
             2. Deposit to wallet
             3. Withdraw from wallet
             4. Local transfer between owned wallets
@@ -406,6 +432,9 @@ class BankingSystem():
         print(' ')
         
         sys.exit()
+
+
+
 
 
 
@@ -456,23 +485,54 @@ class BankingSystem():
 
 
 class Wallet():
-    def __init__(self, wallet_id):
+
+    last_transaction = None
+
+    def __init__(self, wallet_id, wallet_name):
         self.balance = 0  # Initial balance is 0
         self.wallet_id = wallet_id
+        self.wallet_name = wallet_name
 
-    # All of the wallets have a deposit method, so this can be inherited for all variations. 
-    def deposit(self, amount):
-        """Deposit a given amount of money into the wallet."""
-        self.balance += amount
-        
+    # All wallets have a deposit feature, so this deposit method will be inherited for all wallet types. 
+    def deposit(self):
+        while True:
+            try:
+                print('If you have changed your mind about depositing to this wallet, enter any letter or character to return to the previous page.')
+                amount = float(input('Enter the amount you would like to deposit: '))
+                if amount > 0:
+                    self.balance += amount
+                    self.last_transaction = 'deposit' # Changing what the nature of the last transaction with to deposit. 
+                    print(f'Successfully deposited {amount} into your wallet.')
+                    break
+                else:
+                    print('Invalid input. Please enter a positive number.')
+            except ValueError:
+                print('Returning to wallet management page...')
+                break
 
 
 class DailyUseWallet(Wallet):
-    def withdraw(self, amount):
-        """Withdraw a given amount of money from the wallet."""
-        if amount > self.balance:
-            raise ValueError("Insufficient balance")
-        self.balance -= amount
+    wallet_type = 'Daily Use' 
+
+    def withdraw(self):
+        while True:
+            try:
+                print('If you have changed your mind about withdrawing from this wallet, enter any letter or character to return to the previous page.')
+                amount = float(input('Enter the amount you would like to withdraw: '))
+                if amount > 0:
+                    if self.balance >= amount: # Check if balance is sufficient for withdrawal
+                        self.balance -= amount
+                        self.last_transaction = 'withdraw' # Changing what the nature of the last transaction with to withdraw. 
+                        print(f'Successfully withdrawn {amount} from your wallet.')
+                        break
+                    else:
+                        print('Insufficient balance to make this withdrawal. Please enter a different amount.')
+                else:
+                    print('Invalid input. Please enter a positive number.')
+            except ValueError:
+                print('Returning to wallet management page...')
+                break
+
 
     def transfer(self, amount, other_wallet):
         """Transfer a given amount of money to another wallet."""
@@ -487,15 +547,36 @@ class DailyUseWallet(Wallet):
 
 
 class SavingsWallet(Wallet):
-    def withdraw(self, amount):
-        """Withdraw a given amount of money from the wallet."""
-        if amount > self.balance:
-            raise ValueError("Insufficient balance")
-        self.balance -= amount
+    wallet_type = 'Savings'
+
+    def __init__(self, wallet_id, wallet_name):
+        super().__init__(wallet_id, wallet_name)
+        
+         
+    def withdraw(self):
+        while True:
+            try:
+                print('If you have changed your mind about withdrawing from this wallet, enter any letter or character to return to the previous page.')
+                amount = float(input('Enter the amount you would like to withdraw: '))
+                if amount > 0:
+                    if self.balance >= amount: # Check if balance is sufficient for withdrawal
+                        self.balance -= amount
+                        self.last_transaction = 'withdraw' # Changing what the nature of the last transaction with to withdraw. 
+                        print(f'Successfully withdrawn {amount} from your wallet.')
+                        break
+                    else:
+                        print('Insufficient balance to make this withdrawal. Please enter a different amount.')
+                else:
+                    print('Invalid input. Please enter a positive number.')
+            except ValueError:
+                print('Returning to wallet management page...')
+                break
+
 
 
 
 class HolidaysWallet(DailyUseWallet):
+    wallet_type = 'Holidays' 
     
     # Holiday wallets have all the same functionality as Daily Use Wallets. 
     # Meaning a error can be raised for the unwanted method, and it can be considered a Holiday wallet. 
@@ -505,7 +586,9 @@ class HolidaysWallet(DailyUseWallet):
 
 
 
-class MortgageWallet(Wallet):
+class MortgageWallet(Wallet): 
+    wallet_type = 'Mortgage' 
+
     # The mortgage wallet has the same functionality as the base Wallet class. 
     # So no additional functions need to be inherited. 
     pass 
