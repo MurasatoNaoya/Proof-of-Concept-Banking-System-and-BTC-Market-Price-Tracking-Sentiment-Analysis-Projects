@@ -1,7 +1,29 @@
-# **README.md file for Part 2 of SDPA assignment**
+# README.md file describing class design & code architecture choices for Part 1 of the assignment, and the additonal libraries and packages external to the Python standard library and/or needed to be imported for Part 2. 
 
 
-### **External packages and libraries**
+
+
+## **Part 1 of SDPA assignment - **
+
+#### **Class Design**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## **Part 2 of SDPA assignment - **
+
+#### **External packages and libraries**
 
 
 
@@ -18,7 +40,7 @@ Installed with the following command -  **pip install pandas** .
 
 - **seaborn:** This library provides functions for creating more advanced and visually appealing plots, built on top of matplotlib.pyplot. Installed with the folloiwng command -  **pip install seaborn** . 
 
-- **datetime:** This library provides classes for working with date and time data. It includes functions for parsing dates and times from strings, formatting dates and times as strings, and performing arithmetic with dates and times. Used in this project to pass in dates into functions to retrieve data within a particular time range. Installed with the following command -  **pip install datetime** . 
+- **datetime:** This library provides classes for working with date and time data. It includes functions for parsing dates and times from strings, formatting dates and times as strings, and performing arithmetic with dates and times. Used in this project to pass in dates into functions to retrieve data within a particular time range. Installed with the following command -  **datetime** is a part of the Python standard library, so it doesn not need to be installed using pip, only imported at the beginning of a script.  
 
 - **nltk, specifically SentimentIntensityAnalyzer / VADER:** This library provides tools for natural language processing tasks such as tokenization, part-of-speech tagging, and sentiment analysis. It is a comprehensive library that is widely used in the field of natural language processing. One of the key components of nltk is the SentimentIntensityAnalyzer, which is a tool for performing sentiment analysis on text data. Used specifically in this report to determine the sentiment polarity of Twitter textual data. VADER as a sentiment analyser can be install entirely by installing 'nltk', using the following - **pip install nltk** . 
 
