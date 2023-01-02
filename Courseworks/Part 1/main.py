@@ -61,7 +61,6 @@ def main():
                     if decision.isnumeric() == False: 
                         print(' ')
                         print('The entered value is not a valid option, please try again.')
-                        print('The login and return to the main menu, please press 3. ')
                         break 
                     
                     if int(decision) == 1:
@@ -175,13 +174,26 @@ def main():
                                     if len(BankingSystemInstance.customers) ==1: 
                                         print('You are currently the only customer in our system, therefore global transfer is not possible at the moment.')
                                         break
-                                    
+                                    print('Please select the other user on our system you would like to tranfer an amount to - ')
                                     customer_reciever = BankingSystemInstance.select_customer(CustomerInstance)
+
+                                    if len(customer_reciever.wallets) == 0:
+                                        print('The selected customer does not have any active wallets to transfer to.')
+                                        break
+
                                     print(' ')
                                     print(f'Customer of username: "{customer_reciever.username}", has been selected as the recipient for customer transfer.')
 
                                     wallet = CustomerInstance.select_wallet() # Defining the souce wallet to send funds from. 
-                                    wallet.transfer_to_customer(CustomerInstance,customer_reciever, BankingSystemInstance)
+                                    if wallet.wallet_type == 'Holidays':
+                                        print(' ')
+                                        print(f'As the selected source wallet is of type "{wallet.wallet_type}", it does not support global transfer functionality.')
+                                        print('If you would like to transfer to the wallet of another customer, please use or create a "Daily Use" wallet instead.')
+                                        print(' ')
+                                        print('Returning to wallet management menu...')
+                                        break
+
+                                    wallet.transfer_to_customer(CustomerInstance, customer_reciever, BankingSystemInstance)
                                     break
 
                                 except AttributeError:
@@ -598,7 +610,6 @@ class BankingSystem():
         if confirmation.isnumeric() == True: 
             print(' ')
             print('The entered value is not a valid option, please try again.')
-            print('The login and return to the main menu, please press 3. ')
             
         elif confirmation.lower() == 'y':
             print(' ')
@@ -1037,6 +1048,16 @@ class HolidaysWallet(DailyUseWallet):
 
     def transfer_amount(self, customer, banking_system): # A customer instance must be passed in order to have access to wallet information and a banking class instance to get the system_account attribute. 
     # Prompt the user to select the destination wallet
+        
+        if self.wallet_type == 'Holidays': 
+            print(' ')
+            print(f'As the selected source wallet is of type "{wallet.wallet_type}", it does not support global transfer functionality.')
+            print('If you would like to transfer to the wallet of another customer, please use or create a "Daily Use" wallet instead.')
+            print(' ')
+            print('Returning to wallet management menu...')
+
+            return
+        
         while True:
             print(' ')
             print('Please select your destination wallet; the wallet you are sending an amount to.')
@@ -1167,6 +1188,7 @@ class MortgageWallet(Wallet):
     # The mortgage wallet has the same functionality as the base Wallet class. 
     # So no additional functions need to be inherited. 
     pass 
+
 
 
 main()
