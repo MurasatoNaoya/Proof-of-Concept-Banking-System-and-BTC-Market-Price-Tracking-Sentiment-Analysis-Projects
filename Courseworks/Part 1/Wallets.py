@@ -1,4 +1,5 @@
 # Base wallet class and all child wallet classes.
+# To be later imoported into the main file.  
 
 class Wallet():
 

@@ -1,4 +1,5 @@
 # Customer class. 
+# To be later imoported into the main file.  
 
 from Wallets import *
 
