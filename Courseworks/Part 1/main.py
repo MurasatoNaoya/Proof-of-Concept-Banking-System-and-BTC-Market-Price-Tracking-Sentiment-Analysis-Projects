@@ -1,6 +1,5 @@
 import sys # sys is part of the Python standard library. Used primary in this script to exit the banking system. 
 
-
 from Customer import Customer
 from BankingSystem import BankingSystem
 from Wallets import *
@@ -34,7 +33,8 @@ def main():
                 
             
             elif int(decision) == 1:
-                BankingSystemInstance.create_account()
+                cus1 = BankingSystemInstance.create_account()
+                BankingSystemInstance.saver_encrypter(cus1)
                 
                 break
 
@@ -101,18 +101,17 @@ def main():
                                 a = False
                                 b = False
                                 c = False
-                                e = False # This must be added to ensure while loop E is not mistakenly run afterwards. 
+                                e = False # This must be added to ensure while loop E is not mistakenly run afterwards. 
                                 break
 
                             
                             elif delete == False:
                                 
                                 c = False
-                                e = False # This must be added to ensure while loop E is not mistakenly run afterwards. 
+                                e = False # This must be added to ensure while loop E is not mistakenly run afterwards. 
                                 break
                         
                         
-
 
             
                     while e: 
@@ -172,9 +171,8 @@ def main():
                                     print('Returning to wallet management menu...')
                                     break
 
-
                             elif int(decision) == 5:
-                                    # Transfer between customers, global wallets
+                                    # Transfer between customers, global wallets
                                 try:
                                     if len(BankingSystemInstance.customers) ==1: 
                                         print('You are currently the only customer in our system, therefore global transfer is not possible at the moment.')
@@ -225,3 +223,5 @@ def main():
 
 if __name__=="__main__":
     main()
+
+

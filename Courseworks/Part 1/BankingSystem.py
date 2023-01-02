@@ -1,8 +1,9 @@
 # Banking System class.
 # To be later imoported into the main file.  
 
-
 import sys 
+import csv 
+
 from Customer import Customer
 class BankingSystem(): 
     
@@ -10,7 +11,6 @@ class BankingSystem():
 
         self.system_account = 0 # Transaction fees start at zero for every run of the program. 
         self.customers = {} # Empty dictionary to store customer objects. 
-
 
     def main_display(self):  # Displaying the text-based screen, where the customer will see their inital options. 
 
@@ -84,9 +84,41 @@ class BankingSystem():
         print(f'Customer of username {new_customer.username}, your banking account has been successfully created.')
         print('To access to your account, please first login using the 2nd option of the menu below.')
         print('Alternatively, you can choose the 1st option again to create another account. ')
+
+        return new_customer
             
 
+    def saver_encrypter(self, customer):
 
+        # Listed in the dictonary are the key pairs for what the substitution encryptor replaces in the password.
+        substitution_cipher_lower = {'a': '!','b': '@','c': '#','d': '$','e': '%','f': '^','g': '&', 'h': '*', 'i': '(', 'j': ')',
+                                'k': '_','l': '+','m': '{', 'n': '}', 'o': '|', 'p': ':', 'q': '"', 'r': '<', 's': '>',  't': '?', 
+                                'u': '[',  'v': ']', 'w': '~','x': '`',  'y': '-',  'z': '='}
+
+        substitution_cipher_upper = {'A': 'Q','B': 'W','C': 'E', 'D': 'R', 'E': 'T','F': 'Y','G': 'U','H': 'I', 'I': 'O', 'J': 'P',
+                                     'K': 'A','L': 'S', 'M': 'D', 'N': 'F', 'O': 'G','P': 'H','Q': 'J', 'R': 'K','S': 'L','T': 'Z',
+                                     'U': 'X','V': 'C', 'W': 'V','X': 'B','Y': 'N', 'Z': 'M'}
+
+        substitution_cipher_symbols = {v: k for k, v in substitution_cipher_lower.items()}
+
+        # Adding ciphers together to account for all symbols. 
+        substitution_cipher_lower.update(substitution_cipher_upper)
+        substitution_cipher_lower.update(substitution_cipher_symbols)
+
+        encrypted_password = ''.join([substitution_cipher_lower[c] if c in substitution_cipher_lower else c for c in customer.password])
+
+        # Open the file in append mode
+        with open('login_details.csv', 'a', newline='') as csvfile:
+            # Create a CSV writer
+            writer = csv.writer(csvfile)
+
+        # Check if the file is empty
+            csvfile.seek(0, 2)  # Go to the end of the file
+            if csvfile.tell() == 0:  # If the file is empty, write the titles
+                writer.writerow(['Username', 'Password', 'Encrypted Password'])
+
+            # Write the row to the CSV file
+            writer.writerow(['  ' + customer.username, '  ' + customer.password, '  ' + encrypted_password])
 
 
     def login_screen(self):
@@ -117,7 +149,6 @@ class BankingSystem():
                 return customer
 
 
-
     def login_check(self, username, password):
         """Verify the provided credentials and return the customer object for the logged in user."""
 
@@ -128,7 +159,6 @@ class BankingSystem():
             raise ValueError("Incorrect password, please try again.")
         
         return self.customers[username] # This returns the customer object for the checked username. 
-
 
     
 
@@ -143,7 +173,6 @@ class BankingSystem():
             
             """)
         
-
 
     def walletm_display(self, customer):
         print(f"""
@@ -162,7 +191,6 @@ class BankingSystem():
 
 
 
-
     def terminate(self): 
         print(' ')
         print('You have chosen to exit the UOB banking system.')
@@ -177,9 +205,7 @@ class BankingSystem():
 
 
 
-
     def del_account(self, customer): 
-
 
         print(' ')
         print('If your account is closed, all account information, including any created wallets will be lost.')
@@ -207,14 +233,12 @@ class BankingSystem():
             
             return False
 
-
         else: 
             print(' ')
             print('The1 value provided is not a valid option.')
             print('Please look at the available options and try again.')
             print(' ')
             print(' ')
-
 
 
     def select_customer(self, CustomerInstance):
@@ -246,7 +270,5 @@ class BankingSystem():
                     print("Invalid selection. Please enter a number corresponding to one of the available customers.")
             except ValueError:
                 print("Invalid input. Please enter a valid number.")
-
-
 
 
