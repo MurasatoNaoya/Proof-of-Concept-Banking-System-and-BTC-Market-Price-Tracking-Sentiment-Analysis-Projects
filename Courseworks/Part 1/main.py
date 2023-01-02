@@ -156,7 +156,7 @@ def main():
                                 try:
                                     print(' ')
                                     print('Please select your source wallet; the wallet you are sending an amount from.')
-                                    wallet = CustomerInstance.select_wallet()
+                                    wallet = CustomerInstance.select_wallet() # Defining the souce wallet to send funds from. 
                                     wallet.transfer_amount(CustomerInstance, BankingSystemInstance)
                                     break
 
@@ -168,6 +168,29 @@ def main():
                                     print('Returning to wallet management menu...')
                                     break
 
+
+                            elif int(decision) == 5:
+                                    # Transfer between customers, global wallets
+                                try:
+                                    if len(BankingSystemInstance.customers) ==1: 
+                                        print('You are currently the only customer in our system, therefore global transfer is not possible at the moment.')
+                                        break
+                                    
+                                    customer_reciever = BankingSystemInstance.select_customer(CustomerInstance)
+                                    print(' ')
+                                    print(f'Customer of username: "{customer_reciever.username}", has been selected as the recipient for customer transfer.')
+
+                                    wallet = CustomerInstance.select_wallet() # Defining the souce wallet to send funds from. 
+                                    wallet.transfer_to_customer(CustomerInstance,customer_reciever, BankingSystemInstance)
+                                    break
+
+                                except AttributeError:
+                                    print(' ')
+                                    print(f'As the selected source wallet is of type "{wallet.wallet_type}", it does not support global transfer functionality.')
+                                    print('If you would like to transfer to the wallet of another customer, please use or create a "Daily Use" wallet instead.')
+                                    print(' ')
+                                    print('Returning to wallet management menu...')
+                                    break
 
                             
                             elif int(decision) == 6: 
@@ -596,10 +619,43 @@ class BankingSystem():
 
         else: 
             print(' ')
-            print('The value provided is not a valid option.')
+            print('The1 value provided is not a valid option.')
             print('Please look at the available options and try again.')
             print(' ')
             print(' ')
+
+
+
+    def select_customer(self, CustomerInstance):
+
+        """Display all available customers and allow the user to select one by number."""
+        print("\n========= Customer selection menu ==========")
+        print(f'Welcome to the customer selection menu, user {CustomerInstance.username}.')
+        print('Please select one of the available customers by entering its number.')
+        print(' ')
+        print('Available customers:')
+        for i, (username, customer) in enumerate(self.customers.items()):
+            if customer != CustomerInstance:
+                # Do not display the currently logged in customer
+                print(f"{i+1}. {customer.username}")
+        print(' ')
+
+        # Prompt the user to select a customer
+        while True:
+            print(' ')
+            selection = input('Enter a number to select a corresponding customer: ')
+            print(' ')
+            try:
+                selection = int(selection)
+                if 1 <= selection <= len(self.customers): # Has to be greater than or equal to 1 as that's the first specified option, and less than or equal to the available customers. 
+                    # Get the customer object corresponding to the selected number
+                    customer = list(self.customers.values())[selection-1]
+                    return customer
+                else:
+                    print("Invalid selection. Please enter a number corresponding to one of the available customers.")
+            except ValueError:
+                print("Invalid input. Please enter a valid number.")
+
 
 
 
@@ -668,7 +724,7 @@ class DailyUseWallet(Wallet):
                         break
                     else:
                         print(' ')
-                        print('Insufficient balance to make this withdrawal. Please enter a different amount.')
+                        print('Insufficient balance to make this withdrawal. Please enter a more suitable amount.')
                 else:
                     print(' ')
                     print('Invalid input. Please enter a positive number.')
@@ -716,8 +772,8 @@ class DailyUseWallet(Wallet):
                         # The recipient only recieves 99.5% of the sent amount.
                         destination_wallet.balance += (amount - transaction_fee)
 
-                        self.last_transaction = 'transfer' # Change the nature of the last transaction to transfer
-                        destination_wallet.last_transaction = 'transfer' # Change the nature of the last transaction to transfer
+                        self.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer
+                        destination_wallet.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer
                         print(f"Successfully transferred {amount - transaction_fee} to the selected wallet, post-fees (0.5% for local transfer.)")
 
                         
@@ -757,8 +813,8 @@ class DailyUseWallet(Wallet):
                                         # The recipient only recieves 99.5% of the sent amount. 
                                         destination_wallet.balance += (amount - transaction_fee)
 
-                                        wallet.last_transaction = 'transfer' # Change the nature of the last transaction to transfer
-                                        destination_wallet.last_transaction = 'transfer' # Change the nature of the last transaction to transfer
+                                        wallet.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer
+                                        destination_wallet.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer
 
                                         print(' ')
                                         print(f"Successfully transferred {amount - transaction_fee} to the selected wallet, post-fees (0.5% for local transfer..")
@@ -806,10 +862,128 @@ class DailyUseWallet(Wallet):
 
 
 
-    def transfer_to_customer(self, amount, customer, customer_wallet_name):
-        """Transfer a given amount of money to another customer's wallet."""
-        self.withdraw(amount)
-        customer.wallets[customer_wallet_name].deposit(amount)
+    def transfer_to_customer(self, customer_sender, customer_reciever, banking_system ):
+# Prompt the user to select the destination wallet
+        while True:
+            print(' ')
+            print('Please select your destination wallet; the wallet you are sending an amount to.')
+            destination_wallet = customer_reciever.select_wallet()
+            if destination_wallet != self:
+                # Destination wallet is different from the source wallet, so the transfer can proceed
+                break
+            else:
+                print("The source and destination wallets cannot be the same. Please select a different destination wallet.")
+
+        while True:
+
+            try:
+                amount = float(input("Enter the amount you want to transfer: "))
+
+                if amount == 0:
+                    print('')
+                    print('The provided input was invalid, please enter a non-zero amount to transfer.')
+                    print(' ')
+
+
+                elif amount > 0:
+                    # Check if the current wallet has sufficient balance to complete the transaction
+                    if amount <= self.balance:
+                        # Transfer the amount
+                        self.balance -= amount
+
+                        # The fee applied to local transfers is 1.5%, sent to the banking system's 'system_account' attribute.
+                        transaction_fee = amount * 0.015
+                        banking_system.system_account += transaction_fee
+                        
+                        # The recipient only recieves 98.5% of the sent amount.
+                        destination_wallet.balance += (amount - transaction_fee)
+
+                        self.last_transaction = 'global transfer' # Change the nature of the last transaction to transfer
+                        destination_wallet.last_transaction = 'global transfer' # Change the nature of the last transaction to transfer
+                        print(f'Successfully transferred {amount - transaction_fee} to the selected wallet of customer: "{customer_reciever.username}", post-fees (1.5% for global transfer.')
+
+                        
+                        return 
+
+
+                    else:
+                        # The current wallet doesn't have sufficient balance to complete the transaction
+                        # Check if any of the other wallets have sufficient balance
+                        for wallet_name, wallet in customer_sender.wallets.items():
+                            #print('count')
+                            # Skip the current wallet and the destination wallet
+                            if wallet == self or wallet == destination_wallet:
+                                continue
+
+                            if amount <= wallet.balance:
+                                # A wallet with sufficient balance has been found
+                                while True:
+                                    # Prompt the user to confirm if they want to transfer the required amount from this wallet
+                                    print(' ')
+                                    print('The selected wallet does not have sufficient balance, but sufficient funds were found in another of your wallets')
+                                    confirm = input(f'Do you want to transfer {amount} from wallet of name: "{wallet_name}", [y/n]?')
+
+                                    if confirm.isnumeric() == True: 
+                                        # When a value other than Y/y or N/n is inputted.
+                                            print("The entered value is not valid, please try again ans answer with either y, or n.")
+
+
+                                    elif confirm.lower() == 'y':
+                                        # Transfer the required amount from the found wallet
+                                        wallet.balance -= amount
+
+                                        # The fee applied to local transfers is 1.5%, sent to the banking system's 'system_account' attribute.
+                                        transaction_fee = amount * 0.015
+                                        banking_system.system_account += transaction_fee
+
+                                        # The recipient only recieves 98.5% of the sent amount. 
+                                        destination_wallet.balance += (amount - transaction_fee)
+
+                                        wallet.last_transaction = 'global transfer' # Change the nature of the last transaction to transfer
+                                        destination_wallet.last_transaction = 'global transfer' # Change the nature of the last transaction to transfer
+
+                                        print(' ')
+                                        print(f'Successfully transferred {amount - transaction_fee} to the selected wallet of customer: "{customer_reciever.username}", post-fees (1.5% for global transfer..')
+                                        print(' ')
+                                        print('Returning to wallet management menu...')
+                                        
+                                        return
+
+
+                                        
+
+                                    elif confirm.lower() == 'n':
+                                        print(' ')
+                                        print(f'Wallet of name: "{wallet_name}" has been chosen to not be the mediary for this transfer.')
+                                        print('Searching for other viable wallets to use as source wallet...')
+
+                                        break
+
+
+                                    else: 
+
+                                        # When a value other than Y/y or N/n is inputted.
+                                        print(' ')
+                                        print("The entered value is not valid, please try again ans answer with either y, or n.")
+
+                        else:
+                            # No wallet contain enough funds to transfer
+                            print(' ')
+                            print("The defined source wallet has insufficent funds for this transaction")
+                            print('And there are no other wallets associated with your account that can facilitate this transfer.')
+                            print('Please deposit additional funds to one of your wallets or define a smaller amount in order to transfer to carry out this transaction.')
+                            print(' ')
+                            print('Returning to wallet management menu...')
+
+                            return
+
+            except ValueError:
+                # The entered amount is not a number
+                print(' ')
+                print("Please enter a valid amount to transfer.")
+                print('')
+
+
 
 
 
@@ -840,7 +1014,7 @@ class SavingsWallet(Wallet):
                         break
                     else:
                         print(' ')
-                        print('Insufficient balance to make this withdrawal. Please enter a different amount.')
+                        print('Insufficient balance to make this withdrawal. Please enter a more suitable amount.')
                 else:
                     print(' ')
                     print('Invalid input. Please enter a positive number.')
@@ -861,7 +1035,7 @@ class HolidaysWallet(DailyUseWallet):
 
 
 
-    def transfer_amount(self, customer, banking_system):
+    def transfer_amount(self, customer, banking_system): # A customer instance must be passed in order to have access to wallet information and a banking class instance to get the system_account attribute. 
     # Prompt the user to select the destination wallet
         while True:
             print(' ')
@@ -897,8 +1071,8 @@ class HolidaysWallet(DailyUseWallet):
                         # The recipient only recieves 99.5% of the sent amount.
                         destination_wallet.balance += (amount - transaction_fee)
 
-                        self.last_transaction = 'transfer' # Change the nature of the last transaction to transfer
-                        destination_wallet.last_transaction = 'transfer' # Change the nature of the last transaction to transfer
+                        self.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer
+                        destination_wallet.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer
                         print(f"Successfully transferred {amount - transaction_fee} to the selected wallet, post-fees (0.5% for local transfer.)")
 
                         
@@ -938,8 +1112,8 @@ class HolidaysWallet(DailyUseWallet):
                                         # The recipient only recieves 99.5% of the sent amount. 
                                         destination_wallet.balance += (amount - transaction_fee)
 
-                                        wallet.last_transaction = 'transfer' # Change the nature of the last transaction to transfer
-                                        destination_wallet.last_transaction = 'transfer' # Change the nature of the last transaction to transfer
+                                        wallet.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer
+                                        destination_wallet.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer
 
                                         print(' ')
                                         print(f"Successfully transferred {amount - transaction_fee} to the selected wallet, post-fees (0.5% for local transfer..")
