@@ -1,10 +1,10 @@
 # Banking System class.
 # To be later imoported into the main file.  
 
-import sys 
-import csv 
+import sys # sys imported from the Python standard library in order to exit the UOB banking system. 
+import csv  # csv imported from the Python standard library in order to write customer information and encrypted password to retrievable .csv file. 
 
-from Customer import Customer
+from Customer import Customer # Importing customer class from external file.
 class BankingSystem(): 
     
     def __init__(self):
@@ -12,7 +12,10 @@ class BankingSystem():
         self.system_account = 0 # Transaction fees start at zero for every run of the program. 
         self.customers = {} # Empty dictionary to store customer objects. 
 
-    def main_display(self):  # Displaying the text-based screen, where the customer will see their inital options. 
+    def main_display(self): 
+        '''
+        Displaying the text-based screen, where the customer will see their inital options.
+        ''' 
 
         print("""
                 ======= UOB Banking System =======
@@ -23,13 +26,20 @@ class BankingSystem():
                   or enter any other key to exit
                   """)
 
+
     def create_account(self):
+        '''
+        Variety of inputs are asked in order to create a customer profile,
+        to be used later as a form of indentity in the UOB banking system.
+        '''
+
         print('To create an account, you will need to provide the following details:')
         print('First name, last name, country of residence, age, email, password and username')
         print(' ')
         while True:
             first_name = input('Please enter your first name: ')
-            if not first_name.strip():
+            if not first_name.strip(): # A conditional statement checking if the input is soley blank space.
+                                       # If it is, then the input will be rejected and looped until a valid answer is given. This is done for all inputs. 
                 print("First name cannot be empty or consist only of whitespace characters.")
             else:
                 break
@@ -59,26 +69,30 @@ class BankingSystem():
                 break
             
         while True:
-            username = input('And finally, please enter your username: ').rstrip()
+            username = input('Please enter your username: ').rstrip()
             if not username.strip():
                 print("Username cannot be empty or consist only of whitespace characters.")
-            elif username in self.customers: # Usernames must be unique. 
+            elif username in self.customers: # Usernames must be unique,
+                                             # so this conditional statement rejects the input, 
+                                             # if i's the same as the username of an exisiting customer. 
                 print(f' The username: "{username}" is already taken. Please try another.')
             else:
                 break
 
         while True:
-            password = input('Please enter your password: ').rstrip()
+            password = input('And finally, please enter your password: ').rstrip()
             if not password.strip():
                 print("Password cannot be empty or consist only of whitespace characters.")
-            elif password in self.customers: # Passwords must also be unqiue. 
+            elif password in self.customers: # Passwords must also be unqiue. So they are treated similarly to usernames. 
                 print(f' The password: "{password}" is already taken. Please try another.')
             else:
                 break
-
+        
+        # A new instance of the Customer class is defined and added to a dictionary, where its key is its username.
         new_customer = Customer(first_name, last_name, CofR, age, email, username, password)
         self.customers[new_customer.username] =  new_customer
 
+        # Some additional text to make the textual interface more legible and understandable.
         print(' ')
         print('=====================================================================================')
         print(f'Customer of username {new_customer.username}, your banking account has been successfully created.')
@@ -89,12 +103,18 @@ class BankingSystem():
             
 
     def saver_encrypter(self, customer):
+        '''
+        Function that is executed after a customer account is formed that takes their key information; username 
+        and password, encrypts the password using substitution and writes the username, password and 
+        encrypted password to a .csv file. File accounts for customers across script runs.
+        '''
 
         # Listed in the dictonary are the key pairs for what the substitution encryptor replaces in the password.
         substitution_cipher_lower = {'a': '!','b': '@','c': '#','d': '$','e': '%','f': '^','g': '&', 'h': '*', 'i': '(', 'j': ')',
                                 'k': '_','l': '+','m': '{', 'n': '}', 'o': '|', 'p': ':', 'q': '"', 'r': '<', 's': '>',  't': '?', 
                                 'u': '[',  'v': ']', 'w': '~','x': '`',  'y': '-',  'z': '='}
 
+        # Keys pairs for the upper case of those same letters.
         substitution_cipher_upper = {'A': 'Q','B': 'W','C': 'E', 'D': 'R', 'E': 'T','F': 'Y','G': 'U','H': 'I', 'I': 'O', 'J': 'P',
                                      'K': 'A','L': 'S', 'M': 'D', 'N': 'F', 'O': 'G','P': 'H','Q': 'J', 'R': 'K','S': 'L','T': 'Z',
                                      'U': 'X','V': 'C', 'W': 'V','X': 'B','Y': 'N', 'Z': 'M'}
@@ -105,23 +125,27 @@ class BankingSystem():
         substitution_cipher_lower.update(substitution_cipher_upper)
         substitution_cipher_lower.update(substitution_cipher_symbols)
 
+        # Each individual item of inputted password is iterated through and substituted, relative to the final cipher. 
         encrypted_password = ''.join([substitution_cipher_lower[c] if c in substitution_cipher_lower else c for c in customer.password])
 
-        # Open the file in append mode
+        # Open the file in append mode.
         with open('login_details.csv', 'a', newline='') as csvfile:
             # Create a CSV writer
             writer = csv.writer(csvfile)
 
-        # Check if the file is empty
-            csvfile.seek(0, 2)  # Go to the end of the file
-            if csvfile.tell() == 0:  # If the file is empty, write the titles
-                writer.writerow(['Username', 'Password', 'Encrypted Password'])
+            # Check if the file is empty to ensure the column titles are not appended to the .csv file every time the function is called. 
+            csvfile.seek(0, 2)  # Go to the end of the file.
+            if csvfile.tell() == 0:  # If the file is empty, write the titles.
+                writer.writerow(['Username', 'Password', 'Encrypted Password']) # Column titles.
 
             # Write the row to the CSV file
             writer.writerow(['  ' + customer.username, '  ' + customer.password, '  ' + encrypted_password])
 
 
     def login_screen(self):
+        '''
+        The login interface for when users want to access a particular customer account.
+        '''
         while True:
 
             # Get the input for the login credentials
@@ -138,11 +162,12 @@ class BankingSystem():
                 # Print an error message if the login fails
                 print(' ')
                 print('The login details provided are incorrect, as they do not match any registered account on our system.')
-                print('Returning to main menu..')
+                print('Returning to main menu..') # If the user enters the incorrect password, they are returned to the main UOB banking system page. 
                 break
 
             else:
-                # If the login is successful, break out of the loop and return the customer object
+                # If the login is successful, break out of the loop and return the customer object, 
+                # such that any further action is applied to that customer instance specifically.
                 print(' ')
                 print(f"Login successful, welcome {username}.") 
                 
@@ -150,12 +175,12 @@ class BankingSystem():
 
 
     def login_check(self, username, password):
-        """Verify the provided credentials and return the customer object for the logged in user."""
+        """Verify the provided credentials for login and return the customer object for the logged in user."""
 
-        if username not in self.customers:
+        if username not in self.customers: # There is no matching username in the recorded list of customers. 
             raise ValueError("Unfortunately, an account with this username does not exist, please try again or exit this page.")
 
-        if self.customers[username].password != password:
+        if self.customers[username].password != password: # Similarly no matching passowords on the system. 
             raise ValueError("Incorrect password, please try again.")
         
         return self.customers[username] # This returns the customer object for the checked username. 
@@ -163,6 +188,9 @@ class BankingSystem():
     
 
     def customer_display(self, customer): 
+        '''
+        Basic text-based interface for customer once they have logged in.
+        '''
         print(f"""
         ======= Customer account menu for user: {customer.username} =======
         
@@ -175,6 +203,10 @@ class BankingSystem():
         
 
     def walletm_display(self, customer):
+        '''
+        Basic text-based interface for wallet management that a customer navigates to, 
+        once they have logged in. 
+        '''
         print(f"""
         ======= Wallet management menu for user: {customer.username} =======
         
@@ -192,57 +224,107 @@ class BankingSystem():
 
 
     def terminate(self): 
+        '''
+        Ends the UOB banking system script.
+        Implemented when the user chooses to leave the application.
+        '''
         print(' ')
         print('You have chosen to exit the UOB banking system.')
         print('Thank you for your patronage, we hope to see you again soon!')
         print(' ')
         
-        sys.exit()
+        sys.exit() # Why importing sys is necessary. 
 
 
+
+
+    def delete_row(filename, username):
+        '''
+        When a customer account is deleted, the saved customer information
+        associated with the closed customer account is also deleted and 
+        a new .csv file without the closed customer account is made. 
+        '''
+        
+        rows = []
+
+        # Open the file in read mode
+        with open(filename, 'r', newline='') as csvfile:
+            # Read the file
+            reader = csv.reader(csvfile)
+            # Iterate through the rows
+            for row in reader:
+                # If the username column does not match the desired username, keep the row
+                if row[0] != username:
+                    rows.append(row)
+
+        # Open the file in write mode
+        with open(filename, 'w', newline='') as csvfile:
+            # Write the updated list of rows to the file
+            writer = csv.writer(csvfile)
+            writer.writerows(rows)
 
 
 
 
 
     def del_account(self, customer): 
+        '''
+        Close a customer account and delete all associated information with it / stored in it.
+        Such information including: wallets, username and passwords, etc... 
+        '''
 
+        # Additions to textual interface for the sake of being more legible.
         print(' ')
         print('If your account is closed, all account information, including any created wallets will be lost.')
         print('Please enter Y/y, for Yes and N/n, for No.')
         print(' ')
+        # Input asking for confirmation.
         confirmation = input(f'{customer.username}, are sure you want to close your account?')
 
+        # Input should be a letter, not a number, this conditional checks for that.
         if confirmation.isnumeric() == True: 
             print(' ')
             print('The entered value is not a valid option, please try again.')
             
+        # Conditional for when the user confirms to delte their account. 
         elif confirmation.lower() == 'y':
             print(' ')
             print(f'The account of username: {customer.username}, has been closed.')
+            self.delete_row('login_details.csv',customer.username )
             del(self.customers[customer.username])
             print('Now returning to main menu...')
 
-            return True
+            return True # Boolean indicating outcome. 
             
-
+        # In case the customer made a mistake and doesn't want to delete their account / one of their accounts. 
         elif confirmation.lower() == 'n':
             print(' ')
             print(f'The deletion of the account with username: {customer.username}, has been cancelled.')
             print(f'Now returning to customer menu...')
             
-            return False
+            return False # Boolean indicating outcome. 
 
-        else: 
+
+        else: # No valid option provided, loop continued until one is given. 
             print(' ')
-            print('The1 value provided is not a valid option.')
+            print('The value provided is not a valid option.')
             print('Please look at the available options and try again.')
             print(' ')
             print(' ')
 
 
-    def select_customer(self, CustomerInstance):
 
+
+
+
+    def select_customer(self, CustomerInstance):
+        '''
+        Displays all customers associated with the cuurent instance of
+        the BankingSystem class and allows the present user / customer 
+        to select one. Used for global transfers in main.py . 
+        '''
+
+        # More textual imterface for the sake of being understandable. 
         """Display all available customers and allow the user to select one by number."""
         print("\n========= Customer selection menu ==========")
         print(f'Welcome to the customer selection menu, user {CustomerInstance.username}.')
