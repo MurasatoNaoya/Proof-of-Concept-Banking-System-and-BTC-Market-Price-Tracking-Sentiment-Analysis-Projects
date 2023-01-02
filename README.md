@@ -3,7 +3,7 @@
 
 
 
-## **Part 1 of SDPA assignment - **
+## **Part 1 of SDPA assignment -**
 
 #### **Class Design**
 
@@ -21,7 +21,7 @@
 
 
 
-## **Part 2 of SDPA assignment - **
+## **Part 2 of SDPA assignment -**
 
 #### **External packages and libraries**
 
