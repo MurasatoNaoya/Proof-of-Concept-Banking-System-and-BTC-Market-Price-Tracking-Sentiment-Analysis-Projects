@@ -4,7 +4,8 @@
 
 class Wallet():
 
-    last_transaction = None
+    last_transaction = None # The last type of transaction of a wallet will be tracked so it can be later displayed. 
+                            # It is initially set to None, but will be resassigned through future wallet actions. 
 
     def __init__(self, wallet_id, wallet_name):
         self.balance = 0  # Initial balance is 0
@@ -13,15 +14,20 @@ class Wallet():
 
     # All wallets have a deposit feature, so this deposit method will be inherited for all wallet types. 
     def deposit(self):
-        while True:
+        '''
+        A user deposits / adds a specified amount to a wallet. 
+        This functionality is universal regardless of wallet type, 
+        so deposit as a function is defined in the parent class.
+        '''
+        while True: # The user will keep being prompted until they provide a valid input.
             try:
                 print('If you have changed your mind about depositing to this wallet, enter any letter or character to return to the previous page.')
                 amount = float(input('Enter the amount you would like to deposit: '))
                 if amount > 0:
-                    self.balance += amount
+                    self.balance += amount # Depositing / adding amount. 
                     self.last_transaction = 'deposit' # Changing what the nature of the last transaction with to deposit. 
                     print(' ')
-                    print(f'Successfully deposited {amount} into your wallet of name "{self.wallet_name}".')
+                    print(f'Successfully deposited {amount} into your wallet of name "{self.wallet_name}".') # Deposit confirmation. 
                     break
                 else:
                     print(' ')
@@ -33,16 +39,26 @@ class Wallet():
                 break
 
 
-class DailyUseWallet(Wallet):
+
+
+class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) from the base class Wallet.
+                              # This is the case for all wallet types available to customers. 
     wallet_type = 'Daily Use' 
 
     def withdraw(self):
-            # Check if the wallet's balance is equal to 0
+        '''
+        A user withdraws / minus a specified amount from a wallet. 
+        This functionality is only available to the "Daily Use", " Savings" 
+        and "Holidays" wallet types. 
+        '''
+
+        # Check if the wallet's balance is equal to 0. 
+        # A wallet of balance 0 cannot be withdrawn from. 
         if self.balance == 0:
             print('Sorry, you cannot withdraw from a wallet with a balance of 0.')
             return
         
-        while True:
+        while True: # The user will keep being prompted until they provide a valid input.
             try:
                 print(' ')
                 print('If you have changed your mind about withdrawing from this wallet, enter any letter or character to return to the previous page.')
@@ -69,8 +85,14 @@ class DailyUseWallet(Wallet):
 
 
     def transfer_amount(self, customer, banking_system):
+        '''
+        Transfer an specified amount between wallets. 
+        This functionality is only available to the "Daily Use"
+        and "Holidays" wallet types. 
+        '''
+
         # Prompt the user to select the destination wallet
-        while True:
+        while True: # The user will keep being prompted until they provide a valid input.
             print(' ')
             print('Please select your destination wallet; the wallet you are sending an amount to.')
             destination_wallet = customer.select_wallet()
@@ -80,8 +102,7 @@ class DailyUseWallet(Wallet):
             else:
                 print("The source and destination wallets cannot be the same. Please select a different destination wallet.")
 
-        while True:
-
+        while True: # The user will keep being prompted until they provide a valid input.
             try:
                 amount = float(input("Enter the amount you want to transfer: "))
 
@@ -123,7 +144,7 @@ class DailyUseWallet(Wallet):
 
                             if amount <= wallet.balance:
                                 # A wallet with sufficient balance has been found
-                                while True:
+                                while True: 
                                     # Prompt the user to confirm if they want to transfer the required amount from this wallet
                                     print(' ')
                                     print('The selected wallet does not have sufficient balance, but sufficient funds were found in another of your wallets')
@@ -158,7 +179,7 @@ class DailyUseWallet(Wallet):
 
                                         
 
-                                    elif confirm.lower() == 'n':
+                                    elif confirm.lower() == 'n': # If the provided alternative wallet is rejected for whatever reason.
                                         print(' ')
                                         print(f'Wallet of name: "{wallet_name}" has been chosen to not be the mediary for this transfer.')
                                         print('Searching for other viable wallets to use as source wallet...')
@@ -195,7 +216,13 @@ class DailyUseWallet(Wallet):
 
 
     def transfer_to_customer(self, customer_sender, customer_reciever, banking_system ):
-# Prompt the user to select the destination wallet
+        '''
+        The destination wallet of the other customer is selecte from their available wallets
+        and a specified amount to transfer to the other customer's wallet is chosen. 
+        Checks for viability are carried out throughout this entire process.
+        '''
+
+        # Prompt the user to select the destination wallet
         while True:
             print(' ')
             print('Please select your destination wallet; the wallet you are sending an amount to.')
@@ -206,7 +233,7 @@ class DailyUseWallet(Wallet):
             else:
                 print("The source and destination wallets cannot be the same. Please select a different destination wallet.")
 
-        while True:
+        while True: # The user will keep being prompted until they provide a valid input.
 
             try:
                 amount = float(input("Enter the amount you want to transfer: "))
@@ -328,11 +355,19 @@ class SavingsWallet(Wallet):
          
     def withdraw(self):
 
+        '''
+        A user withdraws / minus a specified amount from a wallet. 
+        This functionality is only available to the "Daily Use", " Savings" 
+        and "Holidays" wallet types. 
+        '''
+
+        # Check if the wallet's balance is equal to 0. 
+        # A wallet of balance 0 cannot be withdrawn from. 
         if self.balance == 0:
             print('Sorry, you cannot withdraw from a wallet with a balance of 0.')
             return
-
-        while True:
+        
+        while True: # The user will keep being prompted until they provide a valid input.
             try:
                 print(' ')
                 print('If you have changed your mind about withdrawing from this wallet, enter any letter or character to return to the previous page.')
@@ -369,17 +404,14 @@ class HolidaysWallet(DailyUseWallet):
 
     def transfer_amount(self, customer, banking_system): # A customer instance must be passed in order to have access to wallet information and a banking class instance to get the system_account attribute. 
     # Prompt the user to select the destination wallet
-        
-        if self.wallet_type == 'Holidays': 
-            print(' ')
-            print(f'As the selected source wallet is of type "{wallet.wallet_type}", it does not support global transfer functionality.')
-            print('If you would like to transfer to the wallet of another customer, please use or create a "Daily Use" wallet instead.')
-            print(' ')
-            print('Returning to wallet management menu...')
+        '''
+        Transfer an specified amount between wallets. 
+        This functionality is only available to the "Daily Use"
+        and "Holidays" wallet types. 
+        '''
 
-            return
-        
-        while True:
+        # Prompt the user to select the destination wallet
+        while True: # The user will keep being prompted until they provide a valid input.
             print(' ')
             print('Please select your destination wallet; the wallet you are sending an amount to.')
             destination_wallet = customer.select_wallet()
@@ -389,8 +421,7 @@ class HolidaysWallet(DailyUseWallet):
             else:
                 print("The source and destination wallets cannot be the same. Please select a different destination wallet.")
 
-        while True:
-
+        while True: # The user will keep being prompted until they provide a valid input.
             try:
                 amount = float(input("Enter the amount you want to transfer: "))
 
@@ -432,7 +463,7 @@ class HolidaysWallet(DailyUseWallet):
 
                             if amount <= wallet.balance:
                                 # A wallet with sufficient balance has been found
-                                while True:
+                                while True: 
                                     # Prompt the user to confirm if they want to transfer the required amount from this wallet
                                     print(' ')
                                     print('The selected wallet does not have sufficient balance, but sufficient funds were found in another of your wallets')
@@ -467,7 +498,7 @@ class HolidaysWallet(DailyUseWallet):
 
                                         
 
-                                    elif confirm.lower() == 'n':
+                                    elif confirm.lower() == 'n': # If the provided alternative wallet is rejected for whatever reason.
                                         print(' ')
                                         print(f'Wallet of name: "{wallet_name}" has been chosen to not be the mediary for this transfer.')
                                         print('Searching for other viable wallets to use as source wallet...')
@@ -496,8 +527,7 @@ class HolidaysWallet(DailyUseWallet):
                 # The entered amount is not a number
                 print(' ')
                 print("Please enter a valid amount to transfer.")
-                print('')
-
+                print(' ')
 
 
 
