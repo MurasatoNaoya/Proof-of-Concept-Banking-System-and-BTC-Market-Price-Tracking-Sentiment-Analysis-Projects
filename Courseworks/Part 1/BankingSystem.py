@@ -239,7 +239,7 @@ class BankingSystem():
 
 
 
-    def delete_row(filename, username):
+    def delete_row(self, filename, username):
         '''
         When a customer account is deleted, the saved customer information
         associated with the closed customer account is also deleted and 
@@ -254,13 +254,15 @@ class BankingSystem():
             reader = csv.reader(csvfile)
             # Iterate through the rows
             for row in reader:
-                # If the username column does not match the desired username, keep the row
-                if row[0] != username:
+                # If the username column does not match the desired username, keep the row. 
+                if row[0].strip() != username: # .strip() is applied, as spaces may adversely affect results.
+                    
+                    # If there is no match, the row is appended to the empty list.
                     rows.append(row)
 
         # Open the file in write mode
         with open(filename, 'w', newline='') as csvfile:
-            # Write the updated list of rows to the file
+            # Write the updated list of rows to the file using the appended to list. 
             writer = csv.writer(csvfile)
             writer.writerows(rows)
 
