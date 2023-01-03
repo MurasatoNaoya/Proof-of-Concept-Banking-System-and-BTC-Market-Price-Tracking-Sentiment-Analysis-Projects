@@ -34,6 +34,7 @@ class BankingSystem():
         '''
         Variety of inputs are asked in order to create a customer profile,
         to be used later as a form of indentity in the UOB banking system.
+        The newly generated customer is returned.
         '''
 
         print('To create an account, you will need to provide the following details:')
@@ -109,7 +110,8 @@ class BankingSystem():
         '''
         Function that is executed after a customer account is formed that takes their key information; username 
         and password, encrypts the password using substitution and writes the username, password and 
-        encrypted password to a .csv file. File accounts for customers across script runs.
+        encrypted password to a .csv file. File accounts for customers across script runs. The specific customer
+        who's information is to be stored is passed by a parameter, in the form of a Customer instance.
         '''
 
         # Listed in the dictonary are the key pairs for what the substitution encryptor replaces in the password.
@@ -148,6 +150,7 @@ class BankingSystem():
     def login_screen(self):
         '''
         The login interface for when users want to access a particular customer account.
+        Returns the successful instance of the Customer object, if login passes.
         '''
         while True:
 
@@ -178,7 +181,10 @@ class BankingSystem():
 
 
     def login_check(self, username, password):
-        """Verify the provided credentials for login and return the customer object for the logged in user."""
+        """Verify the provided credentials for login and return the customer object for the logged in user.
+            Takes in the username as a parameter that the user has inputted and similarly with the password.
+            If the login details are accepted, the accepted customer instance is returned.
+        """
 
         if username not in self.customers: # There is no matching username in the recorded list of customers. 
             raise ValueError("Unfortunately, an account with this username does not exist, please try again or exit this page.")
@@ -193,6 +199,8 @@ class BankingSystem():
     def customer_display(self, customer): 
         '''
         Basic text-based interface for customer once they have logged in.
+        Takes customer instance as a parameters in order to display the 
+        username attribute.
         '''
         print(f"""
         ======= Customer account menu for user: {customer.username} =======
@@ -208,7 +216,8 @@ class BankingSystem():
     def walletm_display(self, customer):
         '''
         Basic text-based interface for wallet management that a customer navigates to, 
-        once they have logged in. 
+        once they have logged in. Takes customer instance as a parameters in order to 
+        display the username attribute.
         '''
         print(f"""
         ======= Wallet management menu for user: {customer.username} =======
@@ -245,7 +254,9 @@ class BankingSystem():
         '''
         When a customer account is deleted, the saved customer information
         associated with the closed customer account is also deleted and 
-        a new .csv file without the closed customer account is made. 
+        a new .csv file without the closed customer account is made. Takes the file name, 
+        that will always be 'login_details.csv' and the specific customer's username as 
+        parameters.
         '''
         
         rows = []
@@ -276,6 +287,9 @@ class BankingSystem():
         '''
         Close a customer account and delete all associated information with it / stored in it.
         Such information including: wallets, username and passwords, etc... 
+        Takes the customer instance that wants to be deleted as a parameter.
+        The Boolens True or False are returned if the deletion is confirmed or 
+        rejected, respectively.
         '''
 
         # Additions to textual interface for the sake of being more legible.
@@ -326,7 +340,9 @@ class BankingSystem():
         '''
         Displays all customers associated with the cuurent instance of
         the BankingSystem class and allows the present user / customer 
-        to select one. Used for global transfers in main.py . 
+        to select one, a customer instance is passed in, in order to select
+        a user other than that specific user. Used for global transfers in main.py.
+        The selected customer instance is returned. 
         '''
 
         # More textual imterface for the sake of being understandable. 
