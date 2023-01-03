@@ -20,6 +20,7 @@ class Customer():
         self.wallet_valid = [1, 2, 3, 4]
 
 
+
     def create_wallet(self):
         """
         Create a new wallet with a given name and wallet type.
