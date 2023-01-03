@@ -49,7 +49,9 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
         '''
         A user withdraws / minus a specified amount from a wallet. 
         This functionality is only available to the "Daily Use", " Savings" 
-        and "Holidays" wallet types. 
+        and "Holidays" wallet types. When the user has a balance of 0, 
+        nothing is returned in order to exit the function, in spite of while
+        loops.
         '''
 
         # Check if the wallet's balance is equal to 0. 
@@ -88,7 +90,11 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
         '''
         Transfer an specified amount between wallets. 
         This functionality is only available to the "Daily Use"
-        and "Holidays" wallet types. 
+        and "Holidays" wallet types. The customer parameter represents
+        the user that is transferring locally and the parameter banking_system 
+        represents a BankingSystem instance, that is passed to access the system_account 
+        attribute. Nothing is returned in order to exit the function, in spite of while
+        loops.
         '''
 
         # Prompt the user to select the destination wallet
@@ -217,9 +223,13 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
 
     def transfer_to_customer(self, customer_sender, customer_reciever, banking_system ):
         '''
-        The destination wallet of the other customer is selecte from their available wallets
+        The destination wallet of the other customer is selected from their available wallets
         and a specified amount to transfer to the other customer's wallet is chosen. 
         Checks for viability are carried out throughout this entire process.
+        The customer parameters represent the source customer and the destination customer 
+        respectively and the parameter banking_system represents the running BankingSystem instance, 
+        that is passed to access the system_account attribute. Nothing is returned in order to 
+        exit the function, in spite of while loops.
         '''
 
         # Prompt the user to select the destination wallet
@@ -358,7 +368,9 @@ class SavingsWallet(Wallet):
         '''
         A user withdraws / minus a specified amount from a wallet. 
         This functionality is only available to the "Daily Use", " Savings" 
-        and "Holidays" wallet types. 
+        and "Holidays" wallet types. When the user has a balance of 0, 
+        nothing is returned in order to exit the function, in spite of while
+        loops.
         '''
 
         # Check if the wallet's balance is equal to 0. 
@@ -407,7 +419,11 @@ class HolidaysWallet(DailyUseWallet):
         '''
         Transfer an specified amount between wallets. 
         This functionality is only available to the "Daily Use"
-        and "Holidays" wallet types. 
+        and "Holidays" wallet types. The customer parameter represents
+        the user that is transferring locally and the parameter banking_system 
+        represents the running BankingSystem instance, that is passed to access the system_account 
+        attribute. Nothing is returned in order to exit the function, in spite of while
+        loops. 
         '''
 
         # Prompt the user to select the destination wallet
