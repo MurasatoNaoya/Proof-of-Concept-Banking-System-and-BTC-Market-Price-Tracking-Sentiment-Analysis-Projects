@@ -14,7 +14,7 @@ The BankingSystem class defined within the BankingSystem.py file serves as the o
 
 With regards to design decisions, a key point to mention is that the BankingSystem class is where individual instances of the Customer class, and therefore where all internal customer data is stored. Therefore, for the sake of maintaining a legible and understandable architecture, it was important that any function that makes use of attributes from instances of the Customer class stored in the dictionary customers, should be within the BankingSytem class for ease of retrieval. 
 
-##### Encryption method in BankingSytem class
+##### **Encryption method in BankingSytem class** - 
 The savings of key customer infomation (username and password) to a local .csv file and the encyption of the passwords defined as the method _saver_encrypter_ was chosen to be implemented within the BankingSytem class largely because of how the functionality related to the system itself, not to the actions of any customer or properties of any particular wallet. It would make more sense of the system itself to save the key information and encrypt the passwords, hence its placement in the BankingSytem class. 
 
 The implementation of encryption in the BankingSytem class is that of substitution using a specific cipher specified within the _saver_encrypter_ method. For the sake of this banking application in particular, a method of encryption via substitution was chosen for the following reasons - 
