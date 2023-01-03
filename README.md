@@ -10,7 +10,7 @@ This project is a proof-of-concept banking system that uses three pre-defined cl
 ### **Files / class(es) used in the application & design choices and justifications -**
 
 
-#### **BankingSystem** 
+#### **BankingSystem class** 
 The BankingSystem class defined within the BankingSystem.py file serves as the orchestrator class, in the sense that it is responsible for coordinating the interaction and flow of data between the other classes used in the banking system application, acting as a central point of control for managing the execution of tasks and processes. Most the of the functions that relate to the system itself, like interface displays (e.g customer creation screen, or wallet management menu), login functionality and functions that relate to the manipulation of Customer class instances (create account, delete account, select account, etc..) are defined in the BankingSystem class. 
 
 With regards to design decisions, a key point to mention is that the BankingSystem class is where individual instances of the Customer class, and therefore where all internal customer data is stored. Therefore, for the sake of maintaining a legible and understandable architecture, it was important that any function that makes use of attributes from instances of the Customer class stored in the dictionary customers, should be within the BankingSystem class for ease of retrieval. 
@@ -25,19 +25,19 @@ The savings of key customer information (username and password) to a local .csv 
 The particular substitution cipher implemented in the banking system has been deemed to balance the trade-off between the robustness of encryption and algorithmic complexity / run time and so has been selected for this preliminary application. More sophisticated cryptographic means of encryption may also have to be considered for future iterations of the application. 
 
 
-#### **Customer** 
+#### **Customer class** 
 The Customer class defined with the Customer.py file serves as the class that stores the information associated with the specific accounts a given Customer / instance of the Customer class and allows that information to be manipulated, added to or taken away from - in the case of this banking application specifically, this manipulation is wholly related to the creation, management and display of wallets. In summary, this class account for the management of customer information and assets in relation any one specific customer, for all methods excluding core wallet functionality, (e.g, create wallet, delete wallet, display wallets, etc..) .
 
 In a similar sense to the orchestrator class BankingSystem, it was important to design the Customer class such that methods using attributes associated with the dictionary 'wallets' stored within the Customer class be implemented within there, to allow for easy access to the attributes, rather than having to pass another class containing the 'wallets' attributes as a parameter for every method. 
 
 
-#### **Wallets** 
+#### **Wallets class** 
 The wallet classes defined within the Wallets.py file serve as the classes that define that available functionality of each wallet type and the attributes that vary in response to methods related to customer action, (e.g, last_transaction, balance, etc..) .
 
 Because of how all wallet types support functionality for the customer to deposit money into it, a base class containing the generalised attributes of all wallets and a method for depositing funds was defined, and then that class was inherited by all of the wallets types available in the banking system in the form of child classes. Additional functionality for withdrawals and transfers were also added to wallets of applicable wallet type.
 
 
-#### **main()** 
+#### **main() function** 
 The main function defined within the main.py file finally serves as means of organising the defined functions specified within their respective classes, into a coherent logical banking system. 
 
 The main consideration made for the design of the main() function was about how to break out of several while loops when a certain decision was made; largely to return to the main menu. A simple break statement would be insufficient most of the time, as the depth of the program was greater than 1, and therefore a would not be able to return to the base while loop with a single break statement. To solve this, several Boolean conditions from a-f were defined such that if the logic deemed the breaking of loops from a place where depth >1, it could do so by changing the Boolean statements determining the operation of a given while loop to False, allowing breaks of multiple indentation to happen. 
