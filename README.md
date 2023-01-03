@@ -1,13 +1,13 @@
 # README.md file
 
 
-## **Part 1 of SDPA assignment -**
+## **Part 1 of SDPA assignment**
 
-### **Project description**
+### **Project description -**
 This project is a proof-of-concept banking system that uses three pre-defined classes and their defined functionality in the way of methods, for its simulation. Users are able to create accounts, manage their accounts through the creation of wallets and interact between their walletd and other customers; where applicable, as they see fit. It must be noted that as this is a proof-of-concept program, no real money is deposited to wallets and therefore users of the application can deposit money as they see fit, as there is not external link to any real source of money. 
 
 
-### **Files / class(es) used in the application & design choices and justifications**
+### **Files / class(es) used in the application & design choices and justifications -**
 
 #### **BankingSystem**
 The BankingSystem class defined within the BankingSystem.py file serves as the orchestrator class, in the sense that it is responsible for coordinating the interaction and flow of data between the other classes used in the banking system application, acting as a central point of control for managing the execution of tasks and processes. Most the of the functions that relate to the system itself, like interface displays (e.g customer creation screen, or wallet management menu), login functionality and functions that relate the to manipulation of Customer class instances (create account, delete account, select account, etc..) are defined in the BankingSystem class.
@@ -47,9 +47,9 @@ Because of how all wallets types support functionality for the customer to depos
 
 
 
-## **Part 2 of SDPA assignment -**
+## **Part 2 of SDPA assignment**
 
-### **External packages and libraries**
+### **External packages and libraries -**
 In the Part 2 of this SDPA assignment, various external libraries were implemented for the sake of sourcing data through APIs and enriching data. All are simple to install, so long as Python in installed and all make use of Python's package manager, pip . 
 
 A description of their basic function and information on how they can be install is listed as follows - 
