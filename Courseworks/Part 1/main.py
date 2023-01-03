@@ -160,11 +160,15 @@ def main():
                                     print(f'As the selected wallet is of type "{wallet.wallet_type}", it does not support withdraw functionality.')
                                     print('If you would like to withdraw from a wallet, please create either a "Daily Use" or "Savings" wallet instead. ')
                                     print(' ')
-                                    print('Returning to wallet management menu...')
                                     break
                                 
                             elif int(decision) == 4:
                                 # Transfer between customer's local wallets.
+                                if len(CustomerInstance.wallets) ==1: # Check for whether local transfer is even possible. 
+                                    print(' ')
+                                    print('You currently have only one active wallet, therefore local transfer is not possible.')
+                                    print('Returning to wallet management menu...')
+                                    break
                                 try:
                                     print(' ')
                                     print('Please select your source wallet; the wallet you are sending an amount from.')

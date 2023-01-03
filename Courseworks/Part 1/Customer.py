@@ -63,8 +63,14 @@ class Customer():
                 print("A wallet with this name already exists, please try a different name.")
                 print(' ')
 
+            if wallet_name.strip() == "":
+                print(' ')
+                print('The entered name is only spaces and therefore is not valid.')
+                print('Please try a different wallet name.')
+                print(' ')
+
             else: 
-                break # There is no other wallet with the same name, so the input is accepted. 
+                break # There is no other wallet with the same name and it's not just empty space, so the input is accepted. 
         
         self.wallet_id += 1
         wallet_id = f"{self.wallet_id:03d}"  # Format the wallet_id as a 3-digit string (e.g. 001, 002, etc.)
