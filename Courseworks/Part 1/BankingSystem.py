@@ -1,5 +1,7 @@
-# Banking System class.
-# To be later imoported into the main file.  
+# Name: Andrew Naoya McWilliam, Section: Banking System class, to be later imported into the main file. 
+
+# Accounts for all funtionality in the way of methods that the banking 
+# system should have to accommodate customer information and textual displays. 
 
 
 import sys # sys imported from the Python standard library in order to exit the UOB banking system. 
