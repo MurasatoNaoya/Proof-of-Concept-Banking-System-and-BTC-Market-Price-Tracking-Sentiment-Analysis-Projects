@@ -1,7 +1,8 @@
 # Name: Andrew Naoya McWilliam, Section: Customer class, to be later imported into the main file.  
 
-# Class for storing customer information and data relating to specific instances of the wallet classes.
-# and the methods associated with the display, creation and deletion of wallet class instances. 
+# Class for storing customer information (e.g, name, username password, etc..) and data relating to 
+# specific instances of wallet classes. Specifically, methods associated with the display, creation 
+# and deletion of wallet class instances. 
 
 from Wallets import * # Importing all wallet classes associated with the file 'Wallets'.
 

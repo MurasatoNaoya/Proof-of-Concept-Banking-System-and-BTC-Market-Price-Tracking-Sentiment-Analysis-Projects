@@ -1,8 +1,8 @@
 # Name: Andrew Naoya McWilliam, Section: Base wallet class and all child wallet classes, to be later imoported into the main file.  
 
-# Classes that describe the base wallet class that account for all callable attributes of all wallet instances, namely balance, walletID 
+# Classes that describe the base wallet class that accounts for all callable attributes of all possible wallet instances, namely balance, walletID 
 # and wallet name and last transaction. Additionally, all of the methods related to the various functionalities across 
-# all of the wallet types supported on the UOB banking system (e.g, transfer, withdraw, etc..) . 
+# all of the wallet types (where applicable) supported on the UOB banking system (e.g, transfer, withdraw, etc..) . 
 
 class Wallet():
 
