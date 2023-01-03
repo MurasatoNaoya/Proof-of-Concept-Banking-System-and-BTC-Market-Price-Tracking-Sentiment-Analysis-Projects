@@ -63,7 +63,7 @@ class Customer():
                 print("A wallet with this name already exists, please try a different name.")
                 print(' ')
 
-            if wallet_name.strip() == "":
+            if wallet_name.strip() == "": # Checking whether the provided name is only spaces, which is not a valid name. 
                 print(' ')
                 print('The entered name is only spaces and therefore is not valid.')
                 print('Please try a different wallet name.')
