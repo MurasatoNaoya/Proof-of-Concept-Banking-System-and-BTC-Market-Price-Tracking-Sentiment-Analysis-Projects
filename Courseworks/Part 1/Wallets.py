@@ -314,7 +314,7 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
                                         destination_wallet.last_transaction = 'global transfer' # Change the nature of the last transaction to transfer
 
                                         print(' ')
-                                        print(f'Successfully transferred {amount - transaction_fee} to the selected wallet of customer: "{customer_reciever.username}", post-fees (1.5% for global transfer..')
+                                        print(f'Successfully transferred {amount - transaction_fee} to the selected wallet of customer: "{customer_reciever.username}", post-fees (1.5% for global transfer).')
                                         print(' ')
                                         print('Returning to wallet management menu...')
                                         
