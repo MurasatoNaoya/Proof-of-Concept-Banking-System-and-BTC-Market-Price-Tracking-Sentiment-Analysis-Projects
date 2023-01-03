@@ -1,5 +1,5 @@
 # README.md file
-Link to assignment GitHub repository - https://github.com/MurasatoNaoya/ft22584_EMATM0048
+Link to assignment GitHub repository - **https://github.com/MurasatoNaoya/ft22584_EMATM0048**
 
 ## **Part 1 of SDPA assignment**
 
