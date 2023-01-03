@@ -120,7 +120,8 @@ class Customer():
         """
         Display all available wallets and allows the user to select one by number.
         This function is used extensively for actions involved with wallets, like 
-        depositing, withdrawing and transferring.
+        depositing, withdrawing and transferring. If a wallet is selected, that 
+        particular wallet instance is returned. 
         """
 
         # Additional textual interface to make the program more intuitive. 
@@ -154,6 +155,8 @@ class Customer():
         """
         Display all available wallets. 
         Users can press any key to exit the display screen.
+        If the user exits the method, nothing is returned, in
+        order to end the method. 
         """
         print(f"\n========= All available wallets for user: {self.username} ==========")
         print(' ')
@@ -170,6 +173,8 @@ class Customer():
     def delete_wallet(self): 
         '''
         Deletes a selected wallet associated with the customer account.
+        Regardless of whether the deletion is confirmed or rejected, nothing 
+        is returned, simply to exit out of the while loop and end the method. 
         '''
         
         # The select_wallet() method is implemented in order to specify the wallet the user wants to delete.≈
