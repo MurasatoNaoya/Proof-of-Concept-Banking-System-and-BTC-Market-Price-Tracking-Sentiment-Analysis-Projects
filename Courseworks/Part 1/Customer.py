@@ -1,5 +1,7 @@
-# Customer class. 
-# To be later imported into the main file.  
+# Name: Andrew Naoya McWilliam, Section: Customer class, to be later imported into the main file.  
+
+# Class for storing customer information and data relating to specific instances of the wallet classes.
+# and the methods associated with the display, creation and deletion of wallet class instances. 
 
 from Wallets import * # Importing all wallet classes associated with the file 'Wallets'.
 
