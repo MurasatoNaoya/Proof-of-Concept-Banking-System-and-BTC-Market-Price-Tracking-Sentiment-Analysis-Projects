@@ -141,7 +141,7 @@ class Customer():
         print(' ')
         print('Available wallets:')
         for i, (name, wallet) in enumerate(self.wallets.items()):
-            print(f"{i+1}. {wallet.wallet_id}, {wallet.wallet_type} wallet of name: {name}")
+            print(f"{i+1}. {wallet.wallet_id}, {wallet.wallet_type} wallet of name: {name} and balance {wallet.balance}")
         print(' ')
 
         # Prompt the user to select a wallet
