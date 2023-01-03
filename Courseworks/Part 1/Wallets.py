@@ -160,7 +160,7 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
 
                                     if confirm.isnumeric() == True: 
                                         # When a value other than Y/y or N/n is inputted.
-                                            print("The entered value is not valid, please try again ans answer with either y, or n.")
+                                            print("The entered value is not valid, please try again and answer with either y, or n.")
 
 
                                     elif confirm.lower() == 'y':
@@ -199,14 +199,14 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
 
                                         # When a value other than Y/y or N/n is inputted.
                                         print(' ')
-                                        print("The entered value is not valid, please try again ans answer with either y, or n.")
+                                        print("The entered value is not valid, please try again and answer with either y, or n.")
 
                         else:
                             # No wallet contain enough funds to transfer
                             print(' ')
                             print("The defined source wallet has insufficent funds for this transaction")
                             print('And there are no other wallets associated with your account that can facilitate this transfer.')
-                            print('Please deposit additional funds to one of your wallets or define a smaller amount in order to transfer to carry out this transaction.')
+                            print('Please deposit additional funds to one of your wallets or define a smaller amount to transfer.')
                             print(' ')
                             print('Returning to wallet management menu...')
 
@@ -271,7 +271,7 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
 
                         self.last_transaction = 'global transfer' # Change the nature of the last transaction to transfer
                         destination_wallet.last_transaction = 'global transfer' # Change the nature of the last transaction to transfer
-                        print(f'Successfully transferred {amount - transaction_fee} to the selected wallet of customer: "{customer_reciever.username}", post-fees (1.5% for global transfer.')
+                        print(f'Successfully transferred {amount - transaction_fee} to the selected wallet of customer: "{customer_reciever.username}", post-fees (1.5% for global transfer).')
 
                         
                         return 
@@ -296,7 +296,7 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
 
                                     if confirm.isnumeric() == True: 
                                         # When a value other than Y/y or N/n is inputted.
-                                            print("The entered value is not valid, please try again ans answer with either y, or n.")
+                                            print("The entered value is not valid, please try again and answer with either y, or n.")
 
 
                                     elif confirm.lower() == 'y':
@@ -335,14 +335,14 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
 
                                         # When a value other than Y/y or N/n is inputted.
                                         print(' ')
-                                        print("The entered value is not valid, please try again ans answer with either y, or n.")
+                                        print("The entered value is not valid, please try again and answer with either y, or n.")
 
                         else:
                             # No wallet contain enough funds to transfer
                             print(' ')
                             print("The defined source wallet has insufficent funds for this transaction")
                             print('And there are no other wallets associated with your account that can facilitate this transfer.')
-                            print('Please deposit additional funds to one of your wallets or define a smaller amount in order to transfer to carry out this transaction.')
+                            print('Please deposit additional funds to one of your wallets or define a smaller amount to transfer.')
                             print(' ')
                             print('Returning to wallet management menu...')
 
@@ -489,7 +489,7 @@ class HolidaysWallet(DailyUseWallet):
 
                                     if confirm.isnumeric() == True: 
                                         # When a value other than Y/y or N/n is inputted.
-                                            print("The entered value is not valid, please try again ans answer with either y, or n.")
+                                            print("The entered value is not valid, please try again and answer with either y, or n.")
 
 
                                     elif confirm.lower() == 'y':
@@ -528,14 +528,14 @@ class HolidaysWallet(DailyUseWallet):
 
                                         # When a value other than Y/y or N/n is inputted.
                                         print(' ')
-                                        print("The entered value is not valid, please try again ans answer with either y, or n.")
+                                        print("The entered value is not valid, please try again and answer with either y, or n.")
 
                         else:
                             # No wallet contain enough funds to transfer
                             print(' ')
                             print("The defined source wallet has insufficent funds for this transaction")
                             print('And there are no other wallets associated with your account that can facilitate this transfer.')
-                            print('Please deposit additional funds to one of your wallets or define a smaller amount in order to transfer to carry out this transaction.')
+                            print('Please deposit additional funds to one of your wallets or define a smaller amount to transfer.')
                             print(' ')
                             print('Returning to wallet management menu...')
 

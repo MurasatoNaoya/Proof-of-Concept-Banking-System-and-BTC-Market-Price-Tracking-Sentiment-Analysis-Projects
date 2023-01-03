@@ -201,7 +201,7 @@ class Customer():
             if confirm.isnumeric() == True: 
                 # When a value other than Y/y or N/n is inputted.
                 print(' ')
-                print("The entered value is not valid, please try again ans answer with either y, or n.")
+                print("The entered value is not valid, please try again and answer with either y, or n.")
 
             # User confirms they want to delete the specified wallet. 
             elif confirm.lower() == 'y':
@@ -224,5 +224,5 @@ class Customer():
                 # When a value other than Y/y or N/n is inputted.
                 # As this is within a while loop, the user will be prompted for a valid input until they do. 
                 print(' ')
-                print("The entered value is not valid, please try again ans answer with either y, or n.")
+                print("The entered value is not valid, please try again and answer with either y, or n.")
 

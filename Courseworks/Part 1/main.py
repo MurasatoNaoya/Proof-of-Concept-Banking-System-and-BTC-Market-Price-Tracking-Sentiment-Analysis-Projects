@@ -78,7 +78,7 @@ def main():
 
                     if decision.isnumeric() == False: 
                         print(' ')
-                        print('The entered value is not a valid option, please try again.')
+                        print('The entered value is not a valid option, please enter a number instead of a letter and/or symbol and try again.')
                         break 
                     
                     if int(decision) == 1: # If '1' is entered, the user will be prompted into the wallet creation. 
@@ -107,6 +107,8 @@ def main():
                     elif int(decision) == 4: # If '4' is entered, the user will be prompted to chose an account to delete
                                              # and all relevant information related to the account.
 
+
+
                         while d:
                             delete = BankingSystemInstance.del_account(CustomerInstance)
 
@@ -125,7 +127,12 @@ def main():
                                 e = False # This must be added to ensure while loop E is not mistakenly run afterwards. 
                                 break
                         
-                        
+                    else:  # If the inputted value is numeric, but not in the range specified, it's still invalid. 
+                        print(' ')
+                        print('The entered value is not a valid option, please try a different number that is within the specified range.')
+                        break
+
+
 
             
                     while e: # The customer does have at least one active wallet, and is therefore passed to this wallet management page. 
