@@ -1,3 +1,9 @@
+# Name: Andrew Naoya McWilliam, Section: Main file 
+
+# An script outlining the logic of the banking system, implementing the 
+# various methods defined externally in class files, into a cohesive application. 
+
+
 import sys # sys is part of the Python standard library. Used primary in this script to exit the banking system. 
 
 from Customer import Customer # Customer class imported from Customer file. 
