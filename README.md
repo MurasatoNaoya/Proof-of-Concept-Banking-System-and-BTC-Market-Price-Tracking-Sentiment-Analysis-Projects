@@ -31,12 +31,14 @@ The Customer class defined with the Customer.py file serves as the class that st
 In a similar sense to the orchestrator class BankingSystem, it was important to design the Customer class such that methods using attributes associated with the dictionary 'wallets' stored within the Customer class be implemented within there, to allow for easy access to the attributes, rather than having to pass another class containing the 'wallets' attributes as a parameter for every method. 
 
 
-#### **Wallets** The wallet classes defined within the Wallets.py file serve as the classes that define that available functionality of each wallet type and the attributes that vary in response to methods related to customer action, (e.g, last_transaction, balance, etc..) .
+#### **Wallets** 
+The wallet classes defined within the Wallets.py file serve as the classes that define that available functionality of each wallet type and the attributes that vary in response to methods related to customer action, (e.g, last_transaction, balance, etc..) .
 
 Because of how all wallet types support functionality for the customer to deposit money into it, a base class containing the generalised attributes of all wallets and a method for depositing funds was defined, and then that class was inherited by all of the wallets types available in the banking system in the form of child classes. Additional functionality for withdrawals and transfers were also added to wallets of applicable wallet type.
 
 
-#### **main()** The main function defined within the main.py file finally serves as means of organising the defined functions specified within their respective classes, into a coherent logical banking system. 
+#### **main()** 
+The main function defined within the main.py file finally serves as means of organising the defined functions specified within their respective classes, into a coherent logical banking system. 
 
 The main consideration made for the design of the main() function was about how to break out of several while loops when a certain decision was made; largely to return to the main menu. A simple break statement would be insufficient most of the time, as the depth of the program was greater than 1, and therefore a would not be able to return to the base while loop with a single break statement. To solve this, several Boolean conditions from a-f were defined such that if the logic deemed the breaking of loops from a place where depth >1, it could do so by changing the Boolean statements determining the operation of a given while loop to False, allowing breaks of multiple indentation to happen. 
 
