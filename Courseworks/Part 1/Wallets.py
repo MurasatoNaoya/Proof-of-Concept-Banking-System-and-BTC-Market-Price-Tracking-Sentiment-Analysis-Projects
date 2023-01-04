@@ -55,7 +55,8 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
         and "Holidays" wallet types. If the wallet using the method does 
         not have sufficient funds to withdraw, then other wallets that are
         able to transfer funds due to their wallet type and balance are checked
-        for and provided as a potential mediator, fees applied. When a conclusion is met, 
+        for and provided as a potential mediator, fees applied. Instances of 
+        Customer and BankingInstance passed in as parameters. When a conclusion is met, 
         nothing in returned to exit the method.
         '''
 
@@ -430,7 +431,8 @@ class SavingsWallet(Wallet):
         and "Holidays" wallet types. If the wallet using the method does 
         not have sufficient funds to withdraw, then other wallets that are
         able to transfer funds due to their wallet type and balance are checked
-        for and provided as a potential mediator, fees applied. When a conclusion is met, 
+        for and provided as a potential mediator, fees applied.Instances of the 
+        Customer and BankingSytem classes passed in as parameters. When a conclusion is met, 
         nothing in returned to exit the method.
         '''
 
