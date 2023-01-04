@@ -48,14 +48,14 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
                               # This is the case for all wallet types available to customers. 
     wallet_type = 'Daily Use' 
 
-    def withdraw(self, customer):
+    def withdraw(self, customer, banking_system):
         '''
         A user withdraws / minus a specified amount from a wallet. 
         This functionality is only available to the "Daily Use", " Savings" 
         and "Holidays" wallet types. If the wallet using the method does 
         not have sufficient funds to withdraw, then other wallets that are
         able to transfer funds due to their wallet type and balance are checked
-        for and provided as a potential mediator. When a conclusion is met, 
+        for and provided as a potential mediator, fees applied. When a conclusion is met, 
         nothing in returned to exit the method.
         '''
 
@@ -91,11 +91,18 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
                                 if confirm.lower() == 'y':
                                     # Transfer the required amount from the found wallet
                                     wallet.balance -= amount
-                                    # self.balance += amount
+                                        
+                                    mediary_amount = amount * (1 - 0.005) # What is transferred to the source wallet post-fees.  
+
+                                    # The fee applied to local transfers is 0.5%, sent to the banking system's 'system_account' attribute.
+                                    # This is done twice, as the mediary must transfer funds to the source wallet too. 
+                                    transaction_fee = (amount - mediary_amount)
+                                    banking_system.system_account += transaction_fee
+
                                     wallet.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer. 
                                     self.last_transaction = 'withdraw' # Changing what the nature of the last transaction with to withdraw.
                                     print(' ')
-                                    print(f'{amount} transferred from {wallet_name} to {self.wallet_name}, and then withdrawn from wallet of name "{self.wallet_name}".')
+                                    print(f'{mediary_amount} transferred from "{wallet_name}" to "{self.wallet_name}" post-fees of 0.5%, and then withdrawn from wallet of name "{self.wallet_name}".')
                                     print('Returning to wallet management menu...')
                                     return
 
@@ -128,7 +135,7 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
     def transfer_amount(self, customer, banking_system): # A customer instance must be passed in order to have access to wallet information and a banking class instance to get the system_account attribute. 
     # Prompt the user to select the destination wallet
         '''
-        Transfer an specified amount between wallets. 
+        Transfer an specified amount between wallets, fees applied. 
         This functionality is only available to the "Daily Use"
         and "Holidays" wallet types. The customer parameter represents
         the user that is transferring locally and the parameter banking_system 
@@ -173,7 +180,7 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
 
                         self.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer
                         destination_wallet.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer
-                        print(f"Successfully transferred {amount - transaction_fee} to the selected wallet, post-fees (0.5% for local transfer.)")
+                        print(f"Successfully transferred {amount - transaction_fee} to the selected wallet, post-fees (0.5% for local transfer)..")
 
                         
                         return 
@@ -222,8 +229,8 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
                                         destination_wallet.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer
 
                                         print(' ')
-                                        print(f'Successfully transferred {mediary_amount} from "{wallet.wallet_name}" to the source wallet: "{self.wallet_name}" to mediate transaction, post-fees (0.5% for local transfer..)')
-                                        print(f'Successfully transferred {final_amount} to the destination wallet: "{destination_wallet.wallet_name}" from source wallet: "{self.wallet_name}", post-fees (0.5% for local transfer..)')
+                                        print(f'Successfully transferred {mediary_amount} from "{wallet.wallet_name}" to the source wallet: "{self.wallet_name}" to mediate transaction, post-fees (0.5% for local transfer)..')
+                                        print(f'Successfully transferred {final_amount} to the destination wallet: "{destination_wallet.wallet_name}" from source wallet: "{self.wallet_name}", post-fees (0.5% for local transfer..')
                                         print(' ')
                                         print('Returning to wallet management menu...')
                                         
@@ -270,7 +277,7 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
     def transfer_to_customer(self, customer_sender, customer_reciever, banking_system ):
         '''
         The destination wallet of the other customer is selected from their available wallets
-        and a specified amount to transfer to the other customer's wallet is chosen. 
+        and a specified amount to transfer to the other customer's wallet is chosen, fees applied.
         Checks for viability are carried out throughout this entire process.
         The customer parameters represent the source customer and the destination customer 
         respectively and the parameter banking_system represents the running BankingSystem instance, 
@@ -365,8 +372,8 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
                                         destination_wallet.last_transaction = 'global transfer' # Change the nature of the last transaction to transfer
 
                                         print(' ')
-                                        print(f'Successfully transferred {mediary_amount} to the source wallet: "{self.wallet_name}" from mediary wallet: "{wallet.wallet_name}" to mediate transaction, post-fees (0.5% for local transfer..)')
-                                        print(f'Successfully transferred {final_amount} to the destinaiton wallet: "{customer_reciever.username}" from source wallet: "{self.wallet_name}", post-fees (1.5% for global transfer).')
+                                        print(f'Successfully transferred {mediary_amount} to the source wallet: "{self.wallet_name}" from mediary wallet: "{wallet.wallet_name}" to mediate transaction, post-fees (0.5% for local transfer)..')
+                                        print(f'Successfully transferred {final_amount} to the destinaiton wallet: "{customer_reciever.username}" owned by customer of name: "{customer_reciever.username}" from source wallet: "{self.wallet_name}", post-fees (1.5% for global transfer)..')
                                         print(' ')
                                         print('Returning to wallet management menu...')
                                         
@@ -416,17 +423,15 @@ class SavingsWallet(Wallet):
         super().__init__(wallet_id, wallet_name)
         
          
-    def withdraw(self, customer):
+    def withdraw(self, customer, banking_system):
         '''
         A user withdraws / minus a specified amount from a wallet. 
         This functionality is only available to the "Daily Use", " Savings" 
         and "Holidays" wallet types. If the wallet using the method does 
         not have sufficient funds to withdraw, then other wallets that are
         able to transfer funds due to their wallet type and balance are checked
-        for and provided as a potential mediator. When a conclusion is met, 
+        for and provided as a potential mediator, fees applied. When a conclusion is met, 
         nothing in returned to exit the method.
-
-        
         '''
 
         # Check if the wallet's balance is equal to 0. 
@@ -454,18 +459,25 @@ class SavingsWallet(Wallet):
                             # Skip the current wallet. 
                             if wallet == self:
                                 continue
-                            if amount <= wallet.balance and wallet.wallet_type != 'Mortgage' and wallet.wallet_type != 'Savings': # Mortgage and Savings type wallets do not support transfers.
+                            if amount <= wallet.balance and wallet.wallet_type != 'Mortgage' and wallet.wallet_type != 'Savings': # Mortgage and Savings type wallets do not support transfers. 
                                 # A wallet with sufficient balance has been found
                                 # Prompt the user to confirm if they want to transfer the required amount from this wallet
                                 confirm = input(f"The selected wallet doesn't have sufficient balance. Do you want to transfer {amount} from {wallet_name}? [y/n] ")
                                 if confirm.lower() == 'y':
                                     # Transfer the required amount from the found wallet
                                     wallet.balance -= amount
-                                    # self.balance += amount
+                                        
+                                    mediary_amount = amount * (1 - 0.005) # What is transferred to the source wallet post-fees.  
+
+                                    # The fee applied to local transfers is 0.5%, sent to the banking system's 'system_account' attribute.
+                                    # This is done twice, as the mediary must transfer funds to the source wallet too. 
+                                    transaction_fee = (amount - mediary_amount)
+                                    banking_system.system_account += transaction_fee
+
                                     wallet.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer. 
                                     self.last_transaction = 'withdraw' # Changing what the nature of the last transaction with to withdraw.
                                     print(' ')
-                                    print(f'{amount} transferred from {wallet_name} to {self.wallet_name}, and then withdrawn from wallet of name "{self.wallet_name}".')
+                                    print(f'{mediary_amount} transferred from "{wallet_name}" to "{self.wallet_name}" post-fees of 0.5%, and then withdrawn from wallet of name "{self.wallet_name}".')
                                     print('Returning to wallet management menu...')
                                     return
 
@@ -475,11 +487,12 @@ class SavingsWallet(Wallet):
                                         print(f'Wallet of name: "{wallet_name}" has been chosen to not be the mediary for this transfer.')
                                         print('Searching for other viable wallets to use as source wallet...')
 
-                       
-                       
+
+                                    
                         else:
                             # No wallet with sufficient balance was found. 
-                            print("None of your other wallets have sufficient balance or are of valid wallet type to complete this transaction.")
+                            print(' ')
+                            print("None of your other wallets have sufficient balance, or are of valid wallet type to complete this transaction.")
                             print('Returning to wallet management menu...')
                             return
                 else:
@@ -505,7 +518,7 @@ class HolidaysWallet(DailyUseWallet):
     def transfer_amount(self, customer, banking_system): # A customer instance must be passed in order to have access to wallet information and a banking class instance to get the system_account attribute. 
     # Prompt the user to select the destination wallet
         '''
-        Transfer an specified amount between wallets. 
+        Transfer an specified amount between wallets, fees applied.  
         This functionality is only available to the "Daily Use"
         and "Holidays" wallet types. The customer parameter represents
         the user that is transferring locally and the parameter banking_system 
@@ -550,7 +563,7 @@ class HolidaysWallet(DailyUseWallet):
 
                         self.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer
                         destination_wallet.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer
-                        print(f"Successfully transferred {amount - transaction_fee} to the selected wallet, post-fees (0.5% for local transfer.)")
+                        print(f"Successfully transferred {amount - transaction_fee} to the selected wallet, post-fees (0.5% for local transfer)..")
 
                         
                         return 
@@ -599,8 +612,8 @@ class HolidaysWallet(DailyUseWallet):
                                         destination_wallet.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer
 
                                         print(' ')
-                                        print(f'Successfully transferred {mediary_amount} from {wallet.wallet_name} to the source wallet: "{self.wallet_name}" to mediate transaction, post-fees (0.5% for local transfer..)')
-                                        print(f'Successfully transferred {final_amount} to the destination wallet: "{destination_wallet.wallet_name}" from source wallet: "{self.wallet_name}", post-fees (0.5% for local transfer..)')
+                                        print(f'Successfully transferred {mediary_amount} from {wallet.wallet_name} to the source wallet: "{self.wallet_name}" to mediate transaction, post-fees (0.5% for local transfer)..')
+                                        print(f'Successfully transferred {final_amount} to the destination wallet: "{destination_wallet.wallet_name}" from source wallet: "{self.wallet_name}", post-fees (0.5% for local transfer)..')
                                         print(' ')
                                         print('Returning to wallet management menu...')
                                         

@@ -166,7 +166,7 @@ def main():
                                 wallet = CustomerInstance.select_wallet()
                                 
                                 try: 
-                                    wallet.withdraw(CustomerInstance)
+                                    wallet.withdraw(CustomerInstance, BankingSystemInstance) # Withdrawl function takes in instances of the Customer and BankingSystem class as parameters. 
                                     break 
                                 
                                 except AttributeError: # Only "Daily Use" and "Savings" wallets can be withdrawn from, this try statements account for this.  
