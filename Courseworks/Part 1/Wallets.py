@@ -47,7 +47,7 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
                               # This is the case for all wallet types available to customers. 
     wallet_type = 'Daily Use' 
 
-    def withdraw(self):
+    def withdraw(self, customer):
         '''
         A user withdraws / minus a specified amount from a wallet. 
         This functionality is only available to the "Daily Use", " Savings" 
@@ -58,10 +58,10 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
 
         # Check if the wallet's balance is equal to 0. 
         # A wallet of balance 0 cannot be withdrawn from. 
-        if self.balance == 0:
-            print('Sorry, you cannot withdraw from a wallet with a balance of 0.')
-            return
-        
+        # if self.balance == 0:
+        #     print('Sorry, you cannot withdraw from a wallet with a balance of 0.')
+        #     return
+            
         while True: # The user will keep being prompted until they provide a valid input.
             try:
                 print(' ')
@@ -74,9 +74,34 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
                         print(' ')
                         print(f'Successfully withdrawn {amount} from your wallet of name "{self.wallet_name}".')
                         break
+
                     else:
-                        print(' ')
-                        print('Insufficient balance to make this withdrawal. Please enter a more suitable amount.')
+                        # Check if any of the other wallets, of viable wallet type, have sufficient balance to transfer to the current wallet. 
+                        for wallet_name, wallet in customer.wallets.items():
+                            # Skip the current wallet. 
+                            if wallet == self:
+                                continue
+                            if amount <= wallet.balance and wallet.wallet_type != 'Mortgage' and wallet.wallet_type != 'Savings': # Mortgage and Savings type wallets do not support transfers. 
+                                # A wallet with sufficient balance has been found
+                                # Prompt the user to confirm if they want to transfer the required amount from this wallet
+                                confirm = input(f"The selected wallet doesn't have sufficient balance. Do you want to transfer {amount} from {wallet_name}? [y/n] ")
+                                if confirm.lower() == 'y':
+                                    # Transfer the required amount from the found wallet
+                                    wallet.balance -= amount
+                                    self.balance += amount
+                                    wallet.last_transaction = 'transfer' # Change the nature of the last transaction to transfer. 
+                                    self.last_transaction = 'withdraw' # Changing what the nature of the last transaction with to withdraw.
+                                    print(' ')
+                                    print(f'{amount} transferred from {wallet_name} to {self.wallet_name}, and then withdrawn from wallet of name "{self.wallet_name}".')
+                                    print('Returning to wallet management menu...')
+                                    return
+                                    
+                        else:
+                            # No wallet with sufficient balance was found. 
+                            print(' ')
+                            print("None of your wallets have sufficient balance, or are of valid wallet type to complete this transaction.")
+                            print('Returning to wallet management menu...')
+                            return
                 else:
                     print(' ')
                     print('Invalid input. Please enter a positive number.')
@@ -84,6 +109,7 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
                 print(' ')
                 print(f'Withdrawl from wallet of name: "{self.wallet_name}" cancelled.')
                 print('Returning to wallet management page...')
+
                 break
 
 
@@ -149,13 +175,15 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
                             # Skip the current wallet and the destination wallet
                             if wallet == self or wallet == destination_wallet:
                                 continue
-
-                            if amount <= wallet.balance:
+                            
+                            # For a wallet substitute to mediate a transaction, they have the functionality to transfer locally in the first place. 
+                            # Meaning they cannot be either a Savings or Mortgage wallet. 
+                            if amount <= wallet.balance and wallet.wallet_type != 'Savings' and wallet.wallet_type != 'Mortgage': #
                                 # A wallet with sufficient balance has been found
                                 while True: 
                                     # Prompt the user to confirm if they want to transfer the required amount from this wallet
                                     print(' ')
-                                    print('The selected wallet does not have sufficient balance, but sufficient funds were found in another of your wallets')
+                                    print('The selected wallet does not have sufficient balance, but sufficient funds were found in another of your wallets that supports local transfer.')
                                     confirm = input(f'Do you want to transfer {amount} from wallet of name: "{wallet_name}", [y/n]?')
 
                                     if confirm.isnumeric() == True: 
@@ -205,7 +233,7 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
                             # No wallet contain enough funds to transfer
                             print(' ')
                             print("The defined source wallet has insufficent funds for this transaction")
-                            print('And there are no other wallets associated with your account that can facilitate this transfer.')
+                            print('And there are no other wallets associated with your account that can facilitate this transfer, because of balance and/or wallet type.')
                             print('Please deposit additional funds to one of your wallets or define a smaller amount to transfer.')
                             print(' ')
                             print('Returning to wallet management menu...')
@@ -285,13 +313,15 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
                             # Skip the current wallet and the destination wallet
                             if wallet == self or wallet == destination_wallet:
                                 continue
-
-                            if amount <= wallet.balance:
+                            
+                            # For a substitute wallet to be chosen to act as a valid mediary for a global transaction. 
+                            # It must be a Daily Use wallet, as only Daily use wallets can be used for inter-customer transfers. 
+                            if amount <= wallet.balance and wallet.wallet_type == 'Daily Use':
                                 # A wallet with sufficient balance has been found
                                 while True:
                                     # Prompt the user to confirm if they want to transfer the required amount from this wallet
                                     print(' ')
-                                    print('The selected wallet does not have sufficient balance, but sufficient funds were found in another of your wallets')
+                                    print('The selected wallet does not have sufficient balance, but sufficient funds were found in another of your wallets that supports global transfer.')
                                     confirm = input(f'Do you want to transfer {amount} from wallet of name: "{wallet_name}", [y/n]?')
 
                                     if confirm.isnumeric() == True: 
@@ -341,7 +371,7 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
                             # No wallet contain enough funds to transfer
                             print(' ')
                             print("The defined source wallet has insufficent funds for this transaction")
-                            print('And there are no other wallets associated with your account that can facilitate this transfer.')
+                            print('And there are no other wallets associated with your account that can facilitate this transfer, due to lacking balance and/or wallet type. ')
                             print('Please deposit additional funds to one of your wallets or define a smaller amount to transfer.')
                             print(' ')
                             print('Returning to wallet management menu...')
@@ -365,8 +395,7 @@ class SavingsWallet(Wallet):
         super().__init__(wallet_id, wallet_name)
         
          
-    def withdraw(self):
-
+    def withdraw(self, customer):
         '''
         A user withdraws / minus a specified amount from a wallet. 
         This functionality is only available to the "Daily Use", " Savings" 
@@ -377,10 +406,10 @@ class SavingsWallet(Wallet):
 
         # Check if the wallet's balance is equal to 0. 
         # A wallet of balance 0 cannot be withdrawn from. 
-        if self.balance == 0:
-            print('Sorry, you cannot withdraw from a wallet with a balance of 0.')
-            return
-        
+        # if self.balance == 0:
+        #     print('Sorry, you cannot withdraw from a wallet with a balance of 0.')
+        #     return
+            
         while True: # The user will keep being prompted until they provide a valid input.
             try:
                 print(' ')
@@ -393,9 +422,32 @@ class SavingsWallet(Wallet):
                         print(' ')
                         print(f'Successfully withdrawn {amount} from your wallet of name "{self.wallet_name}".')
                         break
+
                     else:
-                        print(' ')
-                        print('Insufficient balance to make this withdrawal. Please enter a more suitable amount.')
+                        # Check if any of the other wallets, of viable wallet type, have sufficient balance to transfer to the current wallet. 
+                        for wallet_name, wallet in customer.wallets.items():
+                            # Skip the current wallet. 
+                            if wallet == self:
+                                continue
+                            if amount <= wallet.balance and wallet.wallet_type != 'Mortgage' and wallet.wallet_type != 'Savings': # Mortgage and Savings type wallets do not support transfers.
+                                # A wallet with sufficient balance has been found
+                                # Prompt the user to confirm if they want to transfer the required amount from this wallet
+                                confirm = input(f"The selected wallet doesn't have sufficient balance. Do you want to transfer {amount} from {wallet_name}? [y/n] ")
+                                if confirm.lower() == 'y':
+                                    # Transfer the required amount from the found wallet
+                                    wallet.balance -= amount
+                                    self.balance += amount
+                                    wallet.last_transaction = 'transfer' # Change the nature of the last transaction to transfer. 
+                                    self.last_transaction = 'withdraw' # Changing what the nature of the last transaction with to withdraw.
+                                    print(' ')
+                                    print(f'{amount} transferred from {wallet_name} to {self.wallet_name}, and then withdrawn from wallet of name "{self.wallet_name}".')
+                                    print('Returning to wallet management menu...')
+                                    return
+                        else:
+                            # No wallet with sufficient balance was found. 
+                            print("None of your wallets have sufficient balance or are of valid wallet type to complete this transaction.")
+                            print('Returning to wallet management menu...')
+                            return
                 else:
                     print(' ')
                     print('Invalid input. Please enter a positive number.')
@@ -403,8 +455,8 @@ class SavingsWallet(Wallet):
                 print(' ')
                 print(f'Withdrawl from wallet of name: "{self.wallet_name}" cancelled.')
                 print('Returning to wallet management page...')
-                break
 
+                break
 
 
 
@@ -478,13 +530,15 @@ class HolidaysWallet(DailyUseWallet):
                             # Skip the current wallet and the destination wallet
                             if wallet == self or wallet == destination_wallet:
                                 continue
-
-                            if amount <= wallet.balance:
+                            
+                            # For a wallet substitute to mediate a transaction, they have the functionality to transfer locally in the first place. 
+                            # Meaning they cannot be either a Savings or Mortgage wallet. 
+                            if amount <= wallet.balance and wallet.wallet_type != 'Savings' and wallet.wallet_type != 'Mortgage': 
                                 # A wallet with sufficient balance has been found
                                 while True: 
                                     # Prompt the user to confirm if they want to transfer the required amount from this wallet
                                     print(' ')
-                                    print('The selected wallet does not have sufficient balance, but sufficient funds were found in another of your wallets')
+                                    print('The selected wallet does not have sufficient balance, but sufficient funds were found in another of your wallets that supports local transfer.')
                                     confirm = input(f'Do you want to transfer {amount} from wallet of name: "{wallet_name}", [y/n]?')
 
                                     if confirm.isnumeric() == True: 
@@ -534,7 +588,7 @@ class HolidaysWallet(DailyUseWallet):
                             # No wallet contain enough funds to transfer
                             print(' ')
                             print("The defined source wallet has insufficent funds for this transaction")
-                            print('And there are no other wallets associated with your account that can facilitate this transfer.')
+                            print('And there are no other wallets associated with your account that can facilitate this transfer, due to lack of balance and/or wallet type.')
                             print('Please deposit additional funds to one of your wallets or define a smaller amount to transfer.')
                             print(' ')
                             print('Returning to wallet management menu...')

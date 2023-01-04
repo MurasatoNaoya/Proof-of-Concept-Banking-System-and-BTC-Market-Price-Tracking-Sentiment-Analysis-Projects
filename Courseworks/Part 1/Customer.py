@@ -23,7 +23,6 @@ class Customer():
         self.wallet_valid = [1, 2, 3, 4]
 
 
-
     def create_wallet(self):
         """
         Create a new wallet with a given name and wallet type.
@@ -66,18 +65,21 @@ class Customer():
                 print(' ')
                 print("A wallet with this name already exists, please try a different name.")
                 print(' ')
-
+                continue
+            
             if wallet_name.strip() == "": # Checking whether the provided name is only spaces, which is not a valid name. 
                 print(' ')
                 print('The entered name is only spaces and therefore is not valid.')
                 print('Please try a different wallet name.')
                 print(' ')
+                continue
 
             else: 
                 break # There is no other wallet with the same name and it's not just empty space, so the input is accepted. 
         
         self.wallet_id += 1
-        wallet_id = f"{self.wallet_id:03d}"  # Format the wallet_id as a 3-digit string (e.g. 001, 002, etc.)
+        wallet_id = f"{self.wallet_id:03d}"  # Format the wallet_
+
         # Create the appropriate type of wallet based on the provided type
 
         # Daily wallet selection.
