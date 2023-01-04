@@ -222,7 +222,7 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
                                         destination_wallet.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer
 
                                         print(' ')
-                                        print(f'Successfully transferred {mediary_amount} from {wallet.wallet_name} to the source wallet: "{self.wallet_name}" to mediate transaction, post-fees (0.5% for local transfer..)')
+                                        print(f'Successfully transferred {mediary_amount} from "{wallet.wallet_name}" to the source wallet: "{self.wallet_name}" to mediate transaction, post-fees (0.5% for local transfer..)')
                                         print(f'Successfully transferred {final_amount} to the destination wallet: "{destination_wallet.wallet_name}" from source wallet: "{self.wallet_name}", post-fees (0.5% for local transfer..)')
                                         print(' ')
                                         print('Returning to wallet management menu...')
