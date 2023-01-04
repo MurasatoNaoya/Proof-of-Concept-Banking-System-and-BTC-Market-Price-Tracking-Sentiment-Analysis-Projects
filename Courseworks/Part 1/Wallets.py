@@ -98,11 +98,19 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
                                     print(f'{amount} transferred from {wallet_name} to {self.wallet_name}, and then withdrawn from wallet of name "{self.wallet_name}".')
                                     print('Returning to wallet management menu...')
                                     return
+
+
+                                elif confirm.lower() == 'n': # If the provided alternative wallet is rejected for whatever reason.
+                                        print(' ')
+                                        print(f'Wallet of name: "{wallet_name}" has been chosen to not be the mediary for this transfer.')
+                                        print('Searching for other viable wallets to use as source wallet...')
+
+
                                     
                         else:
                             # No wallet with sufficient balance was found. 
                             print(' ')
-                            print("None of your wallets have sufficient balance, or are of valid wallet type to complete this transaction.")
+                            print("None of your other wallets have sufficient balance, or are of valid wallet type to complete this transaction.")
                             print('Returning to wallet management menu...')
                             return
                 else:
@@ -364,7 +372,6 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
 
                                         break
 
-
                                     else: 
 
                                         # When a value other than Y/y or N/n is inputted.
@@ -451,9 +458,18 @@ class SavingsWallet(Wallet):
                                     print(f'{amount} transferred from {wallet_name} to {self.wallet_name}, and then withdrawn from wallet of name "{self.wallet_name}".')
                                     print('Returning to wallet management menu...')
                                     return
+
+
+                                elif confirm.lower() == 'n': # If the provided alternative wallet is rejected for whatever reason.
+                                        print(' ')
+                                        print(f'Wallet of name: "{wallet_name}" has been chosen to not be the mediary for this transfer.')
+                                        print('Searching for other viable wallets to use as source wallet...')
+
+                       
+                       
                         else:
                             # No wallet with sufficient balance was found. 
-                            print("None of your wallets have sufficient balance or are of valid wallet type to complete this transaction.")
+                            print("None of your other wallets have sufficient balance or are of valid wallet type to complete this transaction.")
                             print('Returning to wallet management menu...')
                             return
                 else:
@@ -584,7 +600,6 @@ class HolidaysWallet(DailyUseWallet):
                                         print('Searching for other viable wallets to use as source wallet...')
 
                                         break
-
 
                                     else: 
 
