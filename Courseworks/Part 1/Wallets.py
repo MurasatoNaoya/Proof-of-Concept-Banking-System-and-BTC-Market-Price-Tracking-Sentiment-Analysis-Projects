@@ -52,9 +52,11 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
         '''
         A user withdraws / minus a specified amount from a wallet. 
         This functionality is only available to the "Daily Use", " Savings" 
-        and "Holidays" wallet types. When the user has a balance of 0, 
-        nothing is returned in order to exit the function, in spite of while
-        loops.
+        and "Holidays" wallet types. If the wallet using the method does 
+        not have sufficient funds to withdraw, then other wallets that are
+        able to transfer funds due to their wallet type and balance are checked
+        for and provided as a potential mediator. When a conclusion is met, 
+        nothing in returned to exit the method.
         '''
 
         # Check if the wallet's balance is equal to 0. 
@@ -400,9 +402,13 @@ class SavingsWallet(Wallet):
         '''
         A user withdraws / minus a specified amount from a wallet. 
         This functionality is only available to the "Daily Use", " Savings" 
-        and "Holidays" wallet types. When the user has a balance of 0, 
-        nothing is returned in order to exit the function, in spite of while
-        loops.
+        and "Holidays" wallet types. If the wallet using the method does 
+        not have sufficient funds to withdraw, then other wallets that are
+        able to transfer funds due to their wallet type and balance are checked
+        for and provided as a potential mediator. When a conclusion is met, 
+        nothing in returned to exit the method.
+
+        
         '''
 
         # Check if the wallet's balance is equal to 0. 
