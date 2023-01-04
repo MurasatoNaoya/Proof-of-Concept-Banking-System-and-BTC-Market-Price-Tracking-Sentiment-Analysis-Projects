@@ -91,8 +91,8 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
                                 if confirm.lower() == 'y':
                                     # Transfer the required amount from the found wallet
                                     wallet.balance -= amount
-                                    self.balance += amount
-                                    wallet.last_transaction = 'transfer' # Change the nature of the last transaction to transfer. 
+                                    # self.balance += amount
+                                    wallet.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer. 
                                     self.last_transaction = 'withdraw' # Changing what the nature of the last transaction with to withdraw.
                                     print(' ')
                                     print(f'{amount} transferred from {wallet_name} to {self.wallet_name}, and then withdrawn from wallet of name "{self.wallet_name}".')
@@ -443,8 +443,8 @@ class SavingsWallet(Wallet):
                                 if confirm.lower() == 'y':
                                     # Transfer the required amount from the found wallet
                                     wallet.balance -= amount
-                                    self.balance += amount
-                                    wallet.last_transaction = 'transfer' # Change the nature of the last transaction to transfer. 
+                                    # self.balance += amount
+                                    wallet.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer. 
                                     self.last_transaction = 'withdraw' # Changing what the nature of the last transaction with to withdraw.
                                     print(' ')
                                     print(f'{amount} transferred from {wallet_name} to {self.wallet_name}, and then withdrawn from wallet of name "{self.wallet_name}".')
