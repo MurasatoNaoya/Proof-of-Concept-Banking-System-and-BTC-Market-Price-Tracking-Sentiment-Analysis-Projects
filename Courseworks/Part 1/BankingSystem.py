@@ -8,6 +8,7 @@
 import sys # sys imported from the Python standard library in order to exit the UOB banking system. 
 import csv  # csv imported from the Python standard library in order to write customer information and encrypted password to retrievable .csv file. 
 
+
 from Customer import Customer # Importing customer class from external file.
 class BankingSystem(): 
     

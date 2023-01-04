@@ -4,6 +4,7 @@
 # and wallet name and last transaction. Additionally, all of the methods related to the various functionalities across 
 # all of the wallet types (where applicable) supported on the UOB banking system (e.g, transfer, withdraw, etc..) . 
 
+
 class Wallet():
 
     last_transaction = None # The last type of transaction of a wallet will be tracked so it can be later displayed. 
