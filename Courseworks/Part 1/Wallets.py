@@ -319,12 +319,12 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
                             
                             # For a substitute wallet to be chosen to act as a valid mediary for a global transaction. 
                             # It must be a Daily Use wallet, as only Daily use wallets can be used for inter-customer transfers. 
-                            if amount <= wallet.balance and wallet.wallet_type == 'Daily Use':
+                            if amount <= wallet.balance and wallet.wallet_type == 'Daily Use' or amount <= wallet.balance and wallet.wallet_type == 'Holidays':
                                 # A wallet with sufficient balance has been found
                                 while True:
                                     # Prompt the user to confirm if they want to transfer the required amount from this wallet
                                     print(' ')
-                                    print('The selected wallet does not have sufficient balance, but sufficient funds were found in another of your wallets that supports global transfer.')
+                                    print('The selected wallet does not have sufficient balance, but sufficient funds were found in another of your wallets that supports local transfer, to enable global transfer.')
                                     confirm = input(f'Do you want to transfer {amount} from wallet of name: "{wallet_name}", [y/n]?')
 
                                     if confirm.isnumeric() == True: 
@@ -343,7 +343,8 @@ class DailyUseWallet(Wallet): # Inherits basic attributes and method (deposit) f
                                         # The recipient only recieves 98.5% of the sent amount. 
                                         destination_wallet.balance += (amount - transaction_fee)
 
-                                        wallet.last_transaction = 'global transfer' # Change the nature of the last transaction to transfer
+                                        wallet.last_transaction = 'local transfer' # Change the nature of the last transaction to transfer. 
+                                        self.last_transaction = 'global transfer' # Changing what the nature of the last transaction with to withdraw
                                         destination_wallet.last_transaction = 'global transfer' # Change the nature of the last transaction to transfer
 
                                         print(' ')
